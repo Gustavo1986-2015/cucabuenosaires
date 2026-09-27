@@ -1,18 +1,19 @@
 {
-  "_ayuda": "Pizarra de ofertas. Cada oferta se muestra entre 'desde' y 'hasta' (AAAA-MM-DD). Si 'hasta' está vacío, no vence. 'precio' es texto libre: '$7.300', '2x1', '15% OFF'. 'destacada': true la muestra grande. Colores: mostaza, menta, rosa, tiza.",
-  "actualizado": "2026-09-26",
+  "_ayuda": "Pizarra de ofertas. Cada oferta se muestra entre 'desde' y 'hasta' (AAAA-MM-DD). Si 'hasta' está vacío, no vence. 'precio' es texto libre: '$7.300', '2x1', '15% OFF'. 'destacada': true la muestra grande. Colores: mostaza, menta, rosa, tiza. 'img' (opcional) es una foto de /public/img para el fondo de la oferta destacada.",
+  "actualizado": "2026-09-27",
   "ofertas": [
     {
       "id": "picada-comen4",
-      "titulo": "Comen 4, pican 8",
-      "bajada": "Nuestra picada estrella, pensada para compartir sin quedarse corto.",
+      "titulo": "Picada Premium",
+      "bajada": "Comen 4, pican 8. ¡Con talitas y Coca-Cola de regalo!",
       "items": [],
-      "precio": "Consultá",
+      "precio": "$42.000",
       "etiqueta": "Estrella de la casa",
       "color": "mostaza",
       "destacada": true,
       "desde": "2026-06-01",
-      "hasta": ""
+      "hasta": "",
+      "img": "reales/picada-premium-promo.webp"
     },
     {
       "id": "cremoso-promo",

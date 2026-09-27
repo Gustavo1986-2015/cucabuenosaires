@@ -27,7 +27,7 @@ const opcionesDe = (cat: string) => cats.find((c) => c.id === cat)?.opciones ?? 
         return (
           <li class="card revelar" data-cat={p.cat} data-delay={String(i % 4)} data-tilt>
             <div class="card-foto">
-              <img src={`/img/${p.img}`} alt={p.nombre} width="900" height="700" loading="lazy" decoding="async" />
+              <img src={`/img/${p.img}`} alt={p.nombre} width="900" height="700" loading="lazy" decoding="async" style={p.pos ? `object-position:${p.pos}` : undefined} />
               {p.tag && <span class="card-tag">{p.tag}</span>}
             </div>
             <div class="card-cuerpo">

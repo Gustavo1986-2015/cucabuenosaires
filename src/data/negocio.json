@@ -10,13 +10,39 @@
   "ciudad": "Ciudad Autónoma de Buenos Aires",
   "codigoPostal": "C1407",
   "geo": { "lat": -34.6199471, "lng": -58.4945472 },
-  "instagram": "https://www.instagram.com/cuca.buenosaires/",
-  "instagramUser": "@cuca.buenosaires",
+  "instagram": "https://www.instagram.com/cucabuenosaires/",
+  "instagramUser": "@cucabuenosaires",
   "mapsUrl": "https://www.google.com/maps?cid=2449337540700139380",
   "comoLlegarUrl": "https://www.google.com/maps/dir/?api=1&destination=San+Blas+4101,+C1407+CABA",
   "google": { "rating": 4.9, "opiniones": 113 },
   "envios": "Hacemos envíos a domicilio. El costo se coordina por WhatsApp según la zona.",
-  "pagos": ["Efectivo", "Transferencia", "Mercado Pago", "Cuenta DNI"],
+  "pagos": [
+    {
+      "id": "efectivo",
+      "nombre": "Efectivo",
+      "detalle": "Al retirar o al recibir el pedido."
+    },
+    {
+      "id": "transferencia",
+      "nombre": "Transferencia",
+      "detalle": "Desde cualquier banco o billetera (MODO, Cuenta DNI, Mercado Pago) al alias de Cuca."
+    },
+    {
+      "id": "mercadopago",
+      "nombre": "Mercado Pago",
+      "detalle": "Te enviamos un link de pago: tarjeta de crédito, débito o dinero en cuenta."
+    },
+    {
+      "id": "modo",
+      "nombre": "MODO",
+      "detalle": "Pagás desde la app de tu banco escaneando nuestro QR o con el link que te enviamos."
+    },
+    {
+      "id": "cuentadni",
+      "nombre": "Cuenta DNI",
+      "detalle": "Banco Provincia: link de pago o QR, con los beneficios de Cuenta DNI."
+    }
+  ],
   "horarios": [
     { "dia": 0, "nombre": "Domingo", "turnos": [] },
     { "dia": 1, "nombre": "Lunes", "turnos": [] },
@@ -26,5 +52,12 @@
     { "dia": 5, "nombre": "Viernes", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] },
     { "dia": 6, "nombre": "Sábado", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] }
   ],
-  "franjasEntrega": ["09:30 a 11:30", "11:30 a 13:30", "17:30 a 19:30", "19:30 a 21:00"]
+  "franjasEntrega": [
+    "09:30 a 11:30",
+    "11:30 a 13:30",
+    "17:30 a 19:30",
+    "19:30 a 21:00"
+  ],
+  "alias": "",
+  "_ayuda_pagos": "Completar 'alias' con el alias/CBU de Cuca para mostrarlo en el pedido. Los pagos con link (Mercado Pago, Cuenta DNI) se envían por WhatsApp al confirmar el pedido."
 }

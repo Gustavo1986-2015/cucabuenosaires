@@ -1,36 +1,42 @@
 {
-  "_ayuda": "Catálogo. 'precio' vacío = se muestra 'Consultar'. 'opciones' son las presentaciones que el cliente elige al agregar al pedido. 'img' es un archivo dentro de /public/img.",
+  "_ayuda": "Catálogo. 'precio' vacío = se muestra 'Consultar'. 'opciones' son las presentaciones que el cliente elige al agregar al pedido. 'img' es un archivo dentro de /public/img (las fotos reales están en /public/img/reales). 'pos' (opcional) ajusta el encuadre de la foto, ej: 'center 30%'.",
   "categorias": [
-    { "id": "fiambres", "nombre": "Fiambres", "opciones": ["100 g", "250 g", "500 g", "1 kg"] },
-    { "id": "quesos", "nombre": "Quesos", "opciones": ["100 g", "250 g", "500 g", "1 kg"] },
     { "id": "picadas", "nombre": "Picadas", "opciones": ["Chica (2-3 personas)", "Mediana (4-6 personas)", "Grande (7-10 personas)"] },
+    { "id": "quesos", "nombre": "Quesos", "opciones": ["100 g", "250 g", "500 g", "1 kg", "Horma entera"] },
+    { "id": "fiambres", "nombre": "Fiambres", "opciones": ["100 g", "250 g", "500 g", "1 kg"] },
     { "id": "miga", "nombre": "Sándwiches", "opciones": ["Media docena", "Docena", "2 docenas"] },
     { "id": "medialunas", "nombre": "Medialunas", "opciones": ["Media docena", "Docena", "2 docenas"] },
+    { "id": "pizzas", "nombre": "Prepizzas", "opciones": ["1 unidad", "2 unidades", "4 unidades"] },
     { "id": "almacen", "nombre": "Almacén y vinos", "opciones": ["1 unidad", "2 unidades", "3 unidades"] }
   ],
   "productos": [
+    { "id": "picada-premium", "cat": "picadas", "nombre": "Picada Premium", "desc": "Comen 4, pican 8. Fiambres premium, quesos, nueces y frutas.", "img": "reales/picada-premium-promo.webp", "pos": "center 70%", "precio": "", "tag": "Más pedida" },
+    { "id": "picada-clasica", "cat": "picadas", "nombre": "Picada Clásica", "desc": "Crudo, salame, quesos en bastones, roquefort, aceitunas y pepinitos.", "img": "reales/picada-real.webp", "precio": "" },
+    { "id": "bandejas-evento", "cat": "picadas", "nombre": "Bandejas para eventos", "desc": "Con talitas, servilletas y tenedores de copetín.", "img": "picada-gourmet.webp", "precio": "" },
+
+    { "id": "queso-atuel", "cat": "quesos", "nombre": "Queso Atuel", "desc": "Santa Rosa. Semiduro, ideal para picar y gratinar.", "img": "reales/queso-atuel.webp", "precio": "", "tag": "Nuevo" },
+    { "id": "queso-sardo", "cat": "quesos", "nombre": "Queso Sardo", "desc": "Sabor intenso, para rallar o en cubos.", "img": "reales/queso-sardo.webp", "precio": "" },
+    { "id": "quesos-mesonier", "cat": "quesos", "nombre": "Quesos saborizados Mesonier", "desc": "Medio Oriente y al merkén. Distintos y sabrosos.", "img": "reales/quesos-mesonier.webp", "pos": "center 25%", "precio": "", "tag": "Especial" },
+    { "id": "queso-ahumado", "cat": "quesos", "nombre": "Queso ahumado", "desc": "El que todos vuelven a pedir.", "img": "quesos.webp", "precio": "", "tag": "Favorito" },
+    { "id": "roquefort-malbec", "cat": "quesos", "nombre": "Roquefort al Malbec", "desc": "Intenso, con un toque de vino tinto.", "img": "picada-tabla.webp", "precio": "" },
+    { "id": "reggianito", "cat": "quesos", "nombre": "Reggianito", "desc": "Por horma o fraccionado, para rallar o picar.", "img": "quesos-estante.webp", "precio": "" },
+    { "id": "cremoso", "cat": "quesos", "nombre": "Cremoso", "desc": "Primeras marcas. Mirá la pizarra de ofertas.", "img": "quesos.webp", "precio": "" },
+    { "id": "muzzarella", "cat": "quesos", "nombre": "Muzzarella", "desc": "En horma o rallada, para tus pizzas.", "img": "reales/pizza-muzza.webp", "precio": "" },
+
     { "id": "jamon-crudo", "cat": "fiambres", "nombre": "Jamón crudo", "desc": "Estacionado, cortado fino en el momento.", "img": "picada-premium.webp", "precio": "", "tag": "Premium" },
     { "id": "jamon-cocido", "cat": "fiambres", "nombre": "Jamón cocido natural", "desc": "Suave, jugoso, ideal para sándwiches.", "img": "jamon.webp", "precio": "" },
     { "id": "salame", "cat": "fiambres", "nombre": "Salame de campo", "desc": "Picado grueso, sabor bien de colonia.", "img": "salame.webp", "precio": "" },
     { "id": "bondiola", "cat": "fiambres", "nombre": "Bondiola curada", "desc": "Especiada y tierna. Infaltable en la picada.", "img": "picada-gourmet.webp", "precio": "" },
 
-    { "id": "queso-ahumado", "cat": "quesos", "nombre": "Queso ahumado", "desc": "El que todos vuelven a pedir.", "img": "quesos.webp", "precio": "", "tag": "Favorito" },
-    { "id": "roquefort-malbec", "cat": "quesos", "nombre": "Roquefort al Malbec", "desc": "Intenso, con un toque de vino tinto.", "img": "picada-tabla.webp", "precio": "", "tag": "Especialidad" },
-    { "id": "reggianito", "cat": "quesos", "nombre": "Reggianito", "desc": "Por horma o fraccionado, para rallar o picar.", "img": "quesos-estante.webp", "precio": "" },
-    { "id": "cremoso", "cat": "quesos", "nombre": "Cremoso", "desc": "Primeras marcas. Mirá la pizarra de ofertas.", "img": "quesos.webp", "precio": "" },
+    { "id": "miga-jyq", "cat": "miga", "nombre": "Miga de jamón y queso", "desc": "Triples, bien rellenos, como tienen que ser.", "img": "reales/miga-triples.webp", "pos": "center 40%", "precio": "" },
+    { "id": "miga-roquefort", "cat": "miga", "nombre": "Miga de roquefort, jamón y nuez", "desc": "La especialidad de la casa.", "img": "reales/miga-cuca.webp", "pos": "center 45%", "precio": "", "tag": "Especialidad" },
+    { "id": "miga-surtidos", "cat": "miga", "nombre": "Miga surtidos", "desc": "Variedad de sabores, ideales para reuniones.", "img": "reales/miga-letras.webp", "pos": "center 55%", "precio": "" },
+    { "id": "sandwich-gourmet", "cat": "miga", "nombre": "Sándwiches gourmet", "desc": "Fiambres premium y quesos de verdad, en pan de Viena.", "img": "reales/sandwiches-gourmet.webp", "pos": "center 40%", "precio": "" },
 
-    { "id": "picada-clasica", "cat": "picadas", "nombre": "Picada Clásica", "desc": "Jamón, salame, quesos, aceitunas y pan.", "img": "picada-premium.webp", "precio": "" },
-    { "id": "picada-premium", "cat": "picadas", "nombre": "Picada Premium", "desc": "Crudo, bondiola, ahumado, roquefort y frutos secos.", "img": "picada-dark.webp", "precio": "", "tag": "Más pedida" },
-    { "id": "bandejas-evento", "cat": "picadas", "nombre": "Bandejas para eventos", "desc": "Con talitas, servilletas y tenedores de copetín.", "img": "picada-gourmet.webp", "precio": "" },
+    { "id": "medialunas-manteca", "cat": "medialunas", "nombre": "Medialunas de manteca", "desc": "Doraditas y tiernas, para el desayuno o la merienda.", "img": "reales/medialunas-real.webp", "precio": "" },
+    { "id": "medialunas-jyq", "cat": "medialunas", "nombre": "Medialunas de jamón y queso", "desc": "Rellenas, listas para disfrutar.", "img": "reales/medialunas-jyq.webp", "precio": "", "tag": "Rellenas" },
 
-    { "id": "miga-jyq", "cat": "miga", "nombre": "Miga de jamón y queso", "desc": "El clásico de siempre, bien relleno.", "img": "miga.webp", "precio": "" },
-    { "id": "miga-roquefort", "cat": "miga", "nombre": "Miga de roquefort, jamón y nuez", "desc": "La especialidad de la casa.", "img": "miga.webp", "precio": "", "tag": "Especialidad" },
-    { "id": "miga-surtidos", "cat": "miga", "nombre": "Miga surtidos", "desc": "Variedad de sabores, ideales para reuniones.", "img": "miga.webp", "precio": "" },
-    { "id": "sandwich-gourmet", "cat": "miga", "nombre": "Sándwich gourmet", "desc": "Fiambres premium y quesos de verdad, en pan casero.", "img": "picada-tabla.webp", "precio": "" },
-
-    { "id": "medialunas-manteca", "cat": "medialunas", "nombre": "Medialunas de manteca", "desc": "Doraditas y almibaradas.", "img": "medialunas.webp", "precio": "" },
-    { "id": "medialunas-grasa", "cat": "medialunas", "nombre": "Medialunas de grasa", "desc": "Las de toda la vida, para el mate.", "img": "medialunas-2.webp", "precio": "" },
-    { "id": "medialunas-jyq", "cat": "medialunas", "nombre": "Medialunas rellenas", "desc": "De jamón y queso, listas para disfrutar.", "img": "medialunas-2.webp", "precio": "" },
+    { "id": "prepizzas", "cat": "pizzas", "nombre": "Prepizzas", "desc": "Con salsa, listas para agregar muzza y hornear.", "img": "reales/prepizzas.webp", "precio": "" },
 
     { "id": "aceitunas-griegas", "cat": "almacen", "nombre": "Aceitunas griegas", "desc": "Las que mencionan en todas las reseñas.", "img": "aceitunas.webp", "precio": "", "tag": "Imperdible" },
     { "id": "vinos", "cat": "almacen", "nombre": "Vinos seleccionados", "desc": "Tintos y blancos para acompañar la picada.", "img": "vinos.webp", "precio": "" }

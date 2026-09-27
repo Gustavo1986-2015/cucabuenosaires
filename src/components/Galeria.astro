@@ -1,0 +1,82 @@
+---
+import Icono from './Icono.astro';
+import negocio from '../data/negocio.json';
+
+const fotos = [
+  { src: 'reales/ilustracion-local.webp', alt: 'Ilustración de la esquina de Cuca: ¿Qué encontrarás en Cuca?', clase: 'alta' },
+  { src: 'reales/picada-premium-promo.webp', alt: 'Picada Premium de Cuca con pizarra de precio', clase: 'ancha' },
+  { src: 'reales/miga-letras.webp', alt: 'Bandeja de sanguches de miga', clase: 'alta' },
+  { src: 'reales/queso-ojos.webp', alt: 'Horma de queso con vela de cumpleaños número 3', clase: 'alta' },
+  { src: 'reales/medialunas-jyq.webp', alt: 'Medialunas rellenas de jamón y queso', clase: '' },
+  { src: 'reales/sandwiches-gourmet.webp', alt: 'Sándwiches gourmet en pan de Viena', clase: 'alta' },
+  { src: 'reales/prepizzas.webp', alt: 'Prepizzas con salsa', clase: '' },
+  { src: 'reales/miga-triples.webp', alt: 'Sándwiches de miga triples de jamón y queso', clase: '' },
+  { src: 'local-fachada.webp', alt: 'Fachada de Cuca en San Blas 4101', clase: '' },
+];
+---
+<section class="seccion galeria" id="galeria">
+  <div class="contenedor">
+    <header class="gal-cab">
+      <div>
+        <span class="eyebrow revelar">Así es Cuca</span>
+        <h2 class="titulo revelar" data-delay="1">Hecho en <em>San Blas</em></h2>
+      </div>
+      <a class="btn btn-linea revelar" data-delay="2" href={negocio.instagram} target="_blank" rel="noopener">
+        <Icono nombre="instagram" /> Seguinos {negocio.instagramUser}
+      </a>
+    </header>
+
+    <ul class="gal-grid">
+      {fotos.map((f, i) => (
+        <li class:list={['gal-item revelar', f.clase]} data-delay={String(i % 3)}>
+          <button type="button" data-ampliar={`/img/${f.src}`} data-alt={f.alt} aria-label={`Ampliar: ${f.alt}`}>
+            <img src={`/img/${f.src}`} alt={f.alt} loading="lazy" decoding="async" width="900" height="1100" />
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <dialog class="visor" data-visor aria-label="Foto ampliada">
+    <form method="dialog"><button class="visor-cerrar" aria-label="Cerrar"><Icono nombre="cerrar" /></button></form>
+    <img data-visor-img alt="" />
+  </dialog>
+</section>
+
+<style>
+  .gal-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-bottom: 36px; }
+  .gal-cab .titulo { margin-bottom: 0; }
+  .gal-cab :global(svg) { width: 20px; height: 20px; }
+
+  .gal-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 210px; grid-auto-flow: dense; gap: 14px; }
+  .gal-item { border-radius: 20px; overflow: hidden; background: var(--pizarra-2); }
+  .gal-item.alta { grid-row: span 2; }
+  .gal-item.ancha { grid-column: span 2; grid-row: span 2; }
+  .gal-item button { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+  .gal-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease), filter 0.4s; filter: saturate(1.05); }
+  .gal-item:hover img { transform: scale(1.06); filter: saturate(1.15); }
+
+  .visor { padding: 0; border: 0; background: transparent; max-width: min(92vw, 900px); max-height: 92vh; overflow: visible; }
+  .visor::backdrop { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); }
+  .visor img { max-width: 100%; max-height: 88vh; border-radius: 18px; box-shadow: var(--sombra); }
+  .visor-cerrar { position: absolute; top: -18px; right: -18px; z-index: 1; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--tiza); color: var(--negro); display: grid; place-items: center; }
+  .visor-cerrar :global(svg) { width: 20px; height: 20px; }
+
+  @media (max-width: 900px) {
+    .gal-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 170px; gap: 10px; }
+    .visor-cerrar { top: 8px; right: 8px; }
+  }
+</style>
+
+<script>
+  const visor = document.querySelector<HTMLDialogElement>('[data-visor]')!;
+  const img = visor.querySelector<HTMLImageElement>('[data-visor-img]')!;
+  document.querySelectorAll<HTMLButtonElement>('[data-ampliar]').forEach((b) =>
+    b.addEventListener('click', () => {
+      img.src = b.dataset.ampliar!;
+      img.alt = b.dataset.alt || '';
+      visor.showModal();
+    }),
+  );
+  visor.addEventListener('click', (e) => { if (e.target === visor) visor.close(); });
+</script>

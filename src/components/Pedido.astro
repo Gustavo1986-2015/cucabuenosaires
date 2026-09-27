@@ -73,12 +73,19 @@ import negocio from '../data/negocio.json';
           </select>
         </div>
 
-        <div class="campo campo-full">
-          <label for="p-pago">Forma de pago</label>
-          <select id="p-pago" name="pago">
-            {negocio.pagos.map((p) => <option value={p}>{p}</option>)}
-          </select>
-        </div>
+        <fieldset class="campo campo-full pagos">
+          <legend class="etiqueta">Forma de pago</legend>
+          <div class="pagos-grid">
+            {negocio.pagos.map((p, i) => (
+              <label class:list={['pago', `pago-${p.id}`]}>
+                <input type="radio" name="pago" value={p.nombre} data-detalle={p.detalle} checked={i === 0} />
+                <span><strong>{p.nombre}</strong></span>
+              </label>
+            ))}
+          </div>
+          <p class="pago-detalle" data-pago-detalle aria-live="polite">{negocio.pagos[0].detalle}</p>
+          {negocio.alias && <p class="pago-alias">Alias para transferir: <strong>{negocio.alias}</strong></p>}
+        </fieldset>
 
         <div class="campo campo-full">
           <label for="p-notas">Notas <span class="opc">(opcional)</span></label>
@@ -116,6 +123,25 @@ import negocio from '../data/negocio.json';
   .campo-full { grid-column: 1 / -1; }
   .opc { font-weight: 500; color: var(--tiza-3); }
   .segmentado :global(svg) { width: 18px; height: 18px; }
+  .pagos { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .pagos legend { padding: 0; margin-bottom: 6px; }
+  .pagos-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .pago { position: relative; }
+  .pago input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .pago span {
+    display: grid; place-items: center; min-height: 54px; padding: 8px; border-radius: 12px; text-align: center; line-height: 1.15;
+    border: 1.5px solid var(--linea); background: rgba(243, 239, 230, 0.04); font-size: 0.86rem; transition: all 0.2s;
+  }
+  .pago span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--tiza-3)); margin-bottom: 4px; }
+  .pago-mercadopago { --c: #4fc3f7; }
+  .pago-modo { --c: #9fd6bf; }
+  .pago-cuentadni { --c: #6cc36c; }
+  .pago-transferencia { --c: var(--mostaza); }
+  .pago-efectivo { --c: var(--rosa); }
+  .pago input:checked + span { border-color: var(--mostaza); background: rgba(227, 168, 43, 0.12); }
+  .pago input:focus-visible + span { outline: 2px solid var(--mostaza); outline-offset: 2px; }
+  .pago-detalle { margin: 8px 0 0; font-size: 0.84rem; color: var(--tiza-2); }
+  .pago-alias { margin: 4px 0 0; font-size: 0.9rem; }
   .enviar { display: grid; gap: 10px; margin-top: 6px; }
   .grande { min-height: 58px; font-size: 1.05rem; }
   .legal { margin: 0; font-size: 0.78rem; color: var(--tiza-3); text-align: center; }
@@ -124,6 +150,9 @@ import negocio from '../data/negocio.json';
   @media (max-width: 900px) {
     .pedido-grid { grid-template-columns: 1fr; }
     .resumen { position: relative; top: 0; }
+  }
+  @media (max-width: 700px) {
+    .pagos-grid { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 560px) {
     .form { grid-template-columns: 1fr; }
@@ -167,12 +196,20 @@ import negocio from '../data/negocio.json';
   };
   form.addEventListener('change', actualizarEntrega);
 
+  // Explicación del medio de pago elegido
+  const detallePago = form.querySelector<HTMLElement>('[data-pago-detalle]')!;
+  form.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.name === 'pago') detallePago.textContent = t.dataset.detalle || '';
+  });
+
   // Recordar los datos del cliente en este dispositivo
   const CLAVE = 'cuca-cliente-v1';
   const recordar = ['nombre', 'telefono', 'direccion', 'entreCalles', 'pago'];
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}');
-    recordar.forEach((k) => { const el = form.elements.namedItem(k) as HTMLInputElement | null; if (el && guardado[k]) el.value = guardado[k]; });
+    recordar.filter((k) => k !== 'pago').forEach((k) => { const el = form.elements.namedItem(k) as HTMLInputElement | null; if (el && guardado[k]) el.value = guardado[k]; });
+    if (guardado.pago) (form.querySelector(`input[name="pago"][value="${guardado.pago}"]`) as HTMLInputElement | null)?.click();
     if (guardado.entrega) (form.querySelector(`input[name="entrega"][value="${guardado.entrega}"]`) as HTMLInputElement | null)?.click();
   } catch { /* sin almacenamiento */ }
   actualizarEntrega();

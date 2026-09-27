@@ -5,21 +5,25 @@ import negocio from '../data/negocio.json';
 const bloques = [
   {
     id: 'miga',
-    img: 'miga.webp',
+    img: 'reales/miga-triples.webp',
+    ar: '4 / 5',
+    pos: 'center 30%',
     titulo: 'Sándwiches de miga',
     tiza: '¡la especialidad!',
-    texto: 'Bien rellenos, como tienen que ser. El de roquefort, jamón y nuez es el más pedido del barrio (y los grandes, dicen, son los mejores).',
+    texto: 'Triples, bien rellenos, como tienen que ser. El de roquefort, jamón y nuez es el más pedido del barrio (y los grandes, dicen, son los mejores).',
     sabores: ['Jamón y queso', 'Roquefort, jamón y nuez', 'Surtidos', 'Triples'],
     prodId: 'miga-surtidos',
     prodNombre: 'Sándwiches de miga',
   },
   {
     id: 'medialunas',
-    img: 'medialunas.webp',
+    img: 'reales/medialunas-real.webp',
+    ar: '4 / 3',
+    pos: 'center',
     titulo: 'Medialunas',
     tiza: 'para el mate',
     texto: 'Doraditas, por docena o media docena. Ideales para desayunos, meriendas y reuniones de oficina. Encargalas con anticipación para eventos.',
-    sabores: ['De manteca', 'De grasa', 'Rellenas de jamón y queso'],
+    sabores: ['De manteca', 'Rellenas de jamón y queso'],
     prodId: 'medialunas-manteca',
     prodNombre: 'Medialunas',
   },
@@ -38,7 +42,7 @@ const waEvento = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent('�
       {bloques.map((b, i) => (
         <article class:list={['bloque', { invertido: i % 2 === 1 }]}>
           <div class="bloque-foto revelar">
-            <img src={`/img/${b.img}`} alt={b.titulo} width="900" height="700" loading="lazy" decoding="async" />
+            <img src={`/img/${b.img}`} alt={b.titulo} width="900" height="700" loading="lazy" decoding="async" style={`aspect-ratio:${b.ar};object-position:${b.pos}`} />
             <span class="tiza bloque-tiza">{b.tiza}</span>
           </div>
           <div class="bloque-texto revelar" data-delay="1">
@@ -69,7 +73,7 @@ const waEvento = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent('�
         <a class="btn btn-wa" href={waEvento} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> Pedir presupuesto</a>
       </div>
       <div class="eventos-foto">
-        <img src="/img/picada-gourmet.webp" alt="Bandeja de picada con fiambres, quesos y frutas" width="900" height="700" loading="lazy" />
+        <img src="/img/reales/picada-premium-promo.webp" alt="Picada Premium de Cuca armada para compartir" width="900" height="1200" loading="lazy" style="object-position: 35% 92%" />
       </div>
     </div>
   </div>
@@ -81,7 +85,8 @@ const waEvento = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent('�
   .bloque { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 72px); align-items: center; }
   .bloque.invertido .bloque-foto { order: 2; }
   .bloque-foto { position: relative; border-radius: 28px; overflow: visible; }
-  .bloque-foto img { width: 100%; aspect-ratio: 5 / 4; object-fit: cover; border-radius: 28px; box-shadow: var(--sombra); }
+  .bloque-foto { max-width: 560px; justify-self: center; width: 100%; }
+  .bloque-foto img { width: 100%; object-fit: cover; border-radius: 28px; box-shadow: var(--sombra); }
   .bloque-tiza {
     position: absolute; bottom: -18px; right: 24px; font-size: clamp(1.8rem, 3vw, 2.6rem); padding: 4px 18px;
     background: var(--pizarra-2); border: 2px dashed var(--linea-2); border-radius: 14px; rotate: -4deg; color: var(--mostaza);

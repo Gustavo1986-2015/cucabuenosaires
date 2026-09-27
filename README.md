@@ -3,10 +3,12 @@
 Sitio web de **Cuca**, fiambrería y quesería de San Blas 4101, Floresta (CABA).
 Una sola página, dinámica, pensada primero para el celular:
 
-- Hero con una **tabla de picada en 3D** (Three.js, procedural) que se arma sola.
+- Hero con la **foto real de una picada de Cuca**, con inclinación 3D, reflejo y etiquetas en capas.
 - **Pizarra de ofertas** que se actualiza editando un archivo, con fechas de vigencia.
 - **Catálogo** con filtros y pedido por presentación (100 g, docena, etc.).
-- **Armá tu picada**: configurador por cantidad de personas, momento, estilo y extras, con vista 3D.
+- **Armá tu picada**: configurador por cantidad de personas, momento, estilo y extras, con una tabla 3D
+  (Three.js, procedural) que se llena según la cantidad de personas y el estilo elegido.
+- **Galería "Así es Cuca"** con fotos reales y link a Instagram (@cucabuenosaires).
 - **Sándwiches de miga, medialunas y bandejas para eventos**.
 - **Reseñas reales de Google**, mapa, horarios y estado "abierto / cerrado" en vivo.
 - **Pedido online**: carrito + formulario que abre WhatsApp (5491159524637) con el pedido escrito.
@@ -25,7 +27,7 @@ Todo el contenido está en `src/data/`. Se puede editar desde GitHub (botón ✏
 | Ofertas de la pizarra | `src/data/ofertas.json` |
 | Productos y presentaciones | `src/data/productos.json` |
 | Reseñas | `src/data/resenas.json` |
-| WhatsApp, horarios, dirección, medios de pago | `src/data/negocio.json` |
+| WhatsApp, horarios, dirección, medios de pago, alias | `src/data/negocio.json` |
 
 ### Ofertas (`ofertas.json`)
 
@@ -56,6 +58,29 @@ Todo el contenido está en `src/data/`. Se puede editar desde GitHub (botón ✏
 - `cat` debe ser una de las categorías de arriba del archivo; las presentaciones salen de la categoría.
 - `img` es un archivo de `public/img/`. Para usar fotos propias, subirlas ahí (ideal `.webp`, 900×700).
 
+### Fotos reales
+
+Los originales están en `fotos-originales/`. Para agregar fotos nuevas:
+
+1. Copiarlas a `fotos-originales/` y sumarlas al diccionario `MAPA` de `tools/procesar-fotos.py`.
+2. Ejecutar `python tools/procesar-fotos.py` (mejora nitidez/color y exporta a `public/img/reales/` en WebP).
+   Opcional: ampliar antes con IA (EDSR x4 de OpenCV) y pasar la carpeta como argumento.
+3. Usar la ruta `reales/<nombre>.webp` en `productos.json`, `ofertas.json` o `Galeria.astro`.
+
+> No guardar fotos dentro de `dist/`: esa carpeta se borra en cada build.
+
+### Medios de pago
+
+Hoy el cliente elige el medio de pago en el formulario y el pedido llega por WhatsApp indicándolo.
+Cuca responde confirmando el total y, según el caso, envía:
+
+- **Mercado Pago**: link de pago creado desde la app de Mercado Pago (tarjetas, débito, dinero en cuenta).
+- **MODO**: QR de cobro (cualquier QR interoperable se puede pagar desde MODO o la app del banco).
+- **Cuenta DNI (Banco Provincia)**: link de pago o QR desde la app *Cuenta DNI Comercios*.
+- **Transferencia**: completar `alias` en `negocio.json` para mostrarlo en el formulario.
+
+Pago online automático (cuando haya precios fijos): ver la sección "Próximos pasos" más abajo.
+
 ---
 
 ## Desarrollo local
@@ -85,8 +110,19 @@ node tools/secciones.mjs http://localhost:4321/ capturas 390 844   # capturas po
 4. Cuando se registre **cucabuenosaires.com.ar**: Pages → Custom domains → agregar el dominio, y actualizar
    `site` en `astro.config.mjs`, `public/robots.txt` y `public/sitemap.xml`.
 
+## Próximos pasos: cobro online automático
+
+Requiere precios cargados y cuentas de comercio. Propuesta:
+
+1. **Mercado Pago Checkout Pro** con una Cloudflare Pages Function (`functions/api/pagar.js`) que arma la
+   preferencia de pago con los precios del servidor (nunca los del navegador) usando el `MP_ACCESS_TOKEN`
+   guardado como variable secreta en Cloudflare, y un webhook que confirma el pago.
+2. **MODO** en el checkout: se suma como botón a través de un gateway compatible (Payway, Getnet, Mobbex, etc.)
+   con el SDK de MODO; requiere contrato con ese gateway.
+3. **Cuenta DNI**: no encontré una integración pública para tiendas web; se cobra con link de pago o QR desde Cuenta DNI Comercios.
+
 ## Créditos
 
-- Fotos de producto ilustrativas de [Unsplash](https://unsplash.com) (licencia libre). Reemplazar por fotos propias
-  del local cuando estén disponibles. La foto de la fachada y el logo son de Cuca.
+- Fotos reales de Cuca en `public/img/reales/` y la fachada. Algunas fotos de fiambres siguen siendo ilustrativas
+  de [Unsplash](https://unsplash.com) (licencia libre) hasta tener fotos propias.
 - Monograma CK redibujado en vector a partir del cartel del local.

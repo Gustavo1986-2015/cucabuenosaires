@@ -27,6 +27,7 @@ const ofertas = [...data.ofertas].sort((a, b) => Number(b.destacada) - Number(a.
       <div class="ofertas-grid">
         {ofertas.map((o) => (
           <article class:list={['oferta', `c-${o.color}`, { destacada: o.destacada }]} data-oferta data-desde={o.desde} data-hasta={o.hasta}>
+            {o.img && <img class="oferta-foto" src={`/img/${o.img}`} alt={o.titulo} width="969" height="1300" loading="lazy" decoding="async" />}
             <span class="oferta-etiqueta">{o.etiqueta}</span>
             <h3 class="tiza oferta-titulo">{o.titulo}</h3>
             {o.bajada && <p class="oferta-bajada">{o.bajada}</p>}
@@ -83,9 +84,10 @@ const ofertas = [...data.ofertas].sort((a, b) => Number(b.destacada) - Number(a.
     transition: transform 0.4s var(--ease), background 0.3s;
   }
   .oferta:hover { transform: translateY(-4px) rotate(-0.4deg); background: rgba(255, 255, 255, 0.045); }
-  .oferta.destacada {
-    grid-row: span 2; justify-content: center; text-align: center; border-style: dashed; border-width: 3px; overflow: hidden; isolation: isolate;
-    background: linear-gradient(180deg, rgba(28, 33, 30, 0.55), rgba(28, 33, 30, 0.92) 70%), url('/img/picada-dark.webp') center / cover;
+  .oferta.destacada { grid-row: span 2; text-align: center; border-style: dashed; border-width: 3px; overflow: hidden; }
+  .oferta-foto {
+    display: block; margin: -22px -22px 8px; width: calc(100% + 44px); max-width: none; aspect-ratio: 5 / 4; object-fit: cover; object-position: 30% 88%;
+    border-bottom: 3px dashed color-mix(in srgb, var(--c) 45%, transparent); filter: saturate(1.08);
   }
   .oferta:not(.destacada):last-child:nth-child(even) { grid-column: span 2; }
   .c-mostaza { --c: var(--mostaza); }
@@ -116,12 +118,13 @@ const ofertas = [...data.ofertas].sort((a, b) => Number(b.destacada) - Number(a.
   @media (max-width: 960px) {
     .ofertas-cab { grid-template-columns: 1fr; }
     .ofertas-grid { grid-template-columns: 1fr 1fr; }
-    .oferta.destacada { grid-column: 1 / -1; grid-row: auto; min-height: 320px; }
+    .oferta.destacada { grid-column: 1 / -1; grid-row: auto; }
+    .oferta-foto { aspect-ratio: 16 / 9; }
     .oferta:not(.destacada):last-child:nth-child(even) { grid-column: 1 / -1; }
   }
   @media (max-width: 560px) {
     .ofertas-grid { grid-template-columns: 1fr; }
-    .oferta.destacada { min-height: 280px; }
+    .oferta-foto { aspect-ratio: 4 / 3; }
     .pizarra { border-radius: 16px; }
   }
 </style>

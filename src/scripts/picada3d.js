@@ -73,6 +73,17 @@ const texAzul = () => lienzo(512, 512, (g, w, h) => {
   }
 });
 
+const texCrudo = () => lienzo(256, 128, (g, w, h) => {
+  const gr = g.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, '#f4e6dc'); gr.addColorStop(0.16, '#e9b3a6'); gr.addColorStop(0.3, '#b8423c');
+  gr.addColorStop(0.85, '#a8352f'); gr.addColorStop(1, '#d88f84');
+  g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 40; i++) {
+    g.strokeStyle = `rgba(250,225,215,${0.08 + rnd() * 0.18})`; g.lineWidth = 1 + rnd() * 2;
+    g.beginPath(); const y = 20 + rnd() * (h - 30); g.moveTo(0, y); g.bezierCurveTo(w * 0.3, y + rnd() * 10 - 5, w * 0.7, y + rnd() * 10 - 5, w, y); g.stroke();
+  }
+});
+
 // ---------- Piezas ----------
 function crearPiezas(mats) {
   const piezas = [];
@@ -200,12 +211,99 @@ function crearPiezas(mats) {
     piezas.push({ obj: sombra(g), pos: [-0.3, 0.05] });
   }
 
+  // 11. Jamón crudo en pliegues (lámina ondulada)
+  {
+    const g = new THREE.Group();
+    for (let k = 0; k < 3; k++) {
+      const geo = new THREE.PlaneGeometry(1.25, 0.42, 48, 6);
+      const pa = geo.attributes.position;
+      for (let i = 0; i < pa.count; i++) {
+        const x = pa.getX(i), y = pa.getY(i);
+        pa.setZ(i, Math.sin(x * 7 + k) * 0.09 + Math.sin(y * 5) * 0.02);
+      }
+      geo.computeVertexNormals();
+      const m = new THREE.Mesh(geo, mats.crudo);
+      m.rotation.set(-Math.PI / 2 + 0.12, 0, 0.35 - k * 0.3);
+      m.position.set(k * 0.12, 0.1 + k * 0.05, k * 0.22 - 0.22);
+      g.add(m);
+    }
+    g.rotation.y = -0.2;
+    piezas.push({ obj: sombra(g), pos: [1.25, -1.35] });
+  }
+
+  // 12. Tomates cherry
+  {
+    const g = new THREE.Group();
+    const geo = new THREE.SphereGeometry(0.13, 22, 16);
+    const hoja = new THREE.ConeGeometry(0.05, 0.05, 5);
+    [[0, 0], [0.26, 0.06], [0.1, 0.25], [-0.16, 0.18], [0.3, -0.2]].forEach(([x, z], i) => {
+      const t = new THREE.Mesh(geo, mats.tomate); t.position.set(x, 0.13 + (i === 2 ? 0.14 : 0), z); g.add(t);
+      const h2 = new THREE.Mesh(hoja, mats.tallo); h2.position.set(x, 0.27 + (i === 2 ? 0.14 : 0), z); g.add(h2);
+    });
+    piezas.push({ obj: sombra(g), pos: [-1.6, -0.1] });
+  }
+
+  // 13. Pepinitos
+  {
+    const g = new THREE.Group();
+    const geo = new THREE.CapsuleGeometry(0.07, 0.42, 6, 14);
+    for (let i = 0; i < 4; i++) {
+      const m = new THREE.Mesh(geo, mats.pepino);
+      m.rotation.set(Math.PI / 2, 0, 0.2 * i - 0.3);
+      m.position.set(i * 0.15, 0.08 + (i % 2) * 0.05, rnd() * 0.1);
+      g.add(m);
+    }
+    piezas.push({ obj: sombra(g), pos: [2.75, -0.05] });
+  }
+
+  // 14. Nueces
+  {
+    const g = new THREE.Group();
+    const geo = new THREE.SphereGeometry(0.12, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2);
+    geo.scale(1.1, 0.7, 0.9);
+    for (let i = 0; i < 7; i++) {
+      const m = new THREE.Mesh(geo, mats.nuez);
+      const a = (i / 7) * Math.PI * 2;
+      m.position.set(Math.cos(a) * 0.22, 0.02 + (i === 3 ? 0.1 : 0), Math.sin(a) * 0.18);
+      m.rotation.y = rnd() * 3;
+      g.add(m);
+    }
+    piezas.push({ obj: sombra(g), pos: [0.35, -0.2] });
+  }
+
+  // 15. Bastones de queso
+  {
+    const g = new THREE.Group();
+    const geo = new RoundedBoxGeometry(0.16, 0.16, 0.85, 2, 0.03);
+    for (let i = 0; i < 6; i++) {
+      const m = new THREE.Mesh(geo, i % 3 === 2 ? mats.cubo2 : mats.cubo1);
+      m.position.set((i % 3) * 0.18, 0.08 + Math.floor(i / 3) * 0.16, Math.floor(i / 3) * 0.05);
+      g.add(m);
+    }
+    g.rotation.y = 1.1;
+    piezas.push({ obj: sombra(g), pos: [-0.35, 1.45] });
+  }
+
+  // 16. Segundo abanico de salame
+  {
+    const g = new THREE.Group();
+    const geo = new THREE.CylinderGeometry(0.3, 0.3, 0.045, 36);
+    for (let i = 0; i < 6; i++) {
+      const m = new THREE.Mesh(geo, [mats.salameLado, mats.salameCara, mats.salameCara]);
+      m.position.set(i * 0.2, 0.04 + i * 0.02, Math.sin(i) * 0.05);
+      m.rotation.set(-0.1, 0, 0.12);
+      g.add(m);
+    }
+    g.rotation.y = -0.5;
+    piezas.push({ obj: sombra(g), pos: [0.95, 1.45] });
+  }
+
   return piezas;
 }
 
 // ---------- Montaje ----------
 export async function montarPicada(canvas, opciones = {}) {
-  const { nivel = 10, parallax = true } = opciones;
+  const { nivel = 10, parallax = true, zoom = 1 } = opciones;
   const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const liviano = matchMedia('(max-width: 700px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
 
@@ -265,6 +363,10 @@ export async function montarPicada(canvas, opciones = {}) {
     tallo: M(0x5b4a2a),
     azul: M(0xffffff, { map: azulTex, roughness: 0.65 }),
     galleta: M(0xd8a45f, { roughness: 0.8 }),
+    crudo: M(0xffffff, { map: texCrudo(), roughness: 0.42, side: THREE.DoubleSide }),
+    tomate: new THREE.MeshPhysicalMaterial({ color: 0xd8261c, roughness: 0.18, clearcoat: 1 }),
+    pepino: new THREE.MeshPhysicalMaterial({ color: 0x5f7a24, roughness: 0.4, clearcoat: 0.5 }),
+    nuez: M(0x9a6a3a, { roughness: 0.9 }),
   };
 
   // Tabla
@@ -311,13 +413,17 @@ export async function montarPicada(canvas, opciones = {}) {
   };
 
   let nivelActual = 0;
-  function setNivel(n) {
+  let ordenActual = piezas.map((_, i) => i);
+  // n = cantidad de piezas visibles; orden = prioridad de aparición (índices de piezas)
+  function setNivel(n, orden) {
+    if (orden) ordenActual = orden;
     n = Math.max(1, Math.min(piezas.length, Math.round(n)));
-    let orden = 0;
+    const visibles = new Set(ordenActual.slice(0, n));
+    let retraso = 0;
     piezas.forEach((p, i) => {
-      const mostrar = i < n;
+      const mostrar = visibles.has(i);
       if (mostrar && (p.anim.estado === 'oculto' || p.anim.estado === 'saliendo')) {
-        p.anim = { estado: 'entrando', inicio: performance.now() / 1000 + (reducir ? -1 : (orden++) * 0.12) };
+        p.anim = { estado: 'entrando', inicio: performance.now() / 1000 + (reducir ? -1 : (retraso++) * 0.12) };
         p.obj.visible = true;
       } else if (!mostrar && (p.anim.estado === 'visible' || p.anim.estado === 'entrando')) {
         p.anim = { estado: 'saliendo', inicio: performance.now() / 1000 };
@@ -332,7 +438,7 @@ export async function montarPicada(canvas, opciones = {}) {
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    const dist = camera.aspect < 1 ? 10.5 / camera.aspect ** 0.6 : 10.2;
+    const dist = (camera.aspect < 1 ? 10.5 / camera.aspect ** 0.6 : 10.2) / zoom;
     camera.position.set(0, dist * 0.62, dist * 0.78);
     camera.lookAt(0, -0.35, 0);
     camera.updateProjectionMatrix();

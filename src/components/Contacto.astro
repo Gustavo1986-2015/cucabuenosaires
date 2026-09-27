@@ -41,6 +41,11 @@ const mapa = `https://www.google.com/maps?q=${encodeURIComponent('CUCA-BS.AS., S
           <p>{negocio.direccion}, {negocio.codigoPostal} {negocio.barrio}<br />{negocio.ciudad}</p>
         </div>
 
+        <div class="bloque-info">
+          <h3><Icono nombre="check" /> Medios de pago</h3>
+          <ul class="medios">{negocio.pagos.map((p) => <li>{p.nombre}</li>)}</ul>
+        </div>
+
         <div class="botones-contacto">
           <a class="btn btn-wa" href={wa} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> WhatsApp</a>
           <a class="btn btn-linea" href={`tel:${negocio.telefonoIntl}`}><Icono nombre="telefono" /> {negocio.telefono}</a>
@@ -87,6 +92,8 @@ const mapa = `https://www.google.com/maps?q=${encodeURIComponent('CUCA-BS.AS., S
   .horarios tr:global(.hoy) th, .horarios tr:global(.hoy) td { color: var(--mostaza); font-weight: 800; }
   .horarios tr:global(.hoy) th::after { content: " · hoy"; font-weight: 600; font-size: 0.8rem; }
   .botones-contacto { display: flex; flex-wrap: wrap; gap: 10px; }
+  .medios { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .medios li { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--linea-2); font-size: 0.86rem; font-weight: 700; }
 
   .pie { border-top: 1px solid var(--linea); padding: 64px 0 40px; background: var(--pizarra); }
   .pie-in { display: grid; justify-items: center; text-align: center; gap: 18px; }

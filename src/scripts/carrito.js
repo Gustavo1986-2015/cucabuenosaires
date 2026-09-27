@@ -60,7 +60,10 @@ export function mensajePedido(d) {
     partes.push('🏪 Retiro en el local (San Blas 4101)');
   }
   if (d.dia) partes.push(`📅 ${d.dia}${d.franja ? ` · ${d.franja} h` : ''}`);
-  if (d.pago) partes.push(`💳 Pago: ${d.pago}`);
+  if (d.pago) {
+    const conLink = ['Mercado Pago', 'MODO', 'Cuenta DNI'].includes(d.pago);
+    partes.push(`💳 Pago: ${d.pago}${conLink ? ' (envíenme el link o QR de pago)' : ''}`);
+  }
   if (d.notas) partes.push(`📝 ${d.notas}`);
   partes.push('', '¿Me confirman precio y disponibilidad? ¡Gracias!');
   return partes.join('\n').replace(/\n{3,}/g, '\n\n');
