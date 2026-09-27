@@ -6,12 +6,13 @@ Una sola página, dinámica, pensada primero para el celular:
 - Hero con la **foto real de una picada de Cuca**, con inclinación 3D, reflejo y etiquetas en capas.
 - **Pizarra de ofertas** que se actualiza editando un archivo, con fechas de vigencia.
 - **Catálogo** con filtros y pedido por presentación (100 g, docena, etc.).
-- **Armá tu picada**: configurador por cantidad de personas, momento, estilo y extras, con una tabla 3D
+- **Armá tu picada**: configurador por cantidad de personas, momento, estilo y extras, con una tabla redonda 3D
   (Three.js, procedural) que se llena según la cantidad de personas y el estilo elegido.
 - **Galería "Así es Cuca"** con fotos reales y link a Instagram (@cucabuenosaires).
 - **Sándwiches de miga, medialunas y bandejas para eventos**.
 - **Reseñas reales de Google**, mapa, horarios y estado "abierto / cerrado" en vivo.
-- **Pedido online**: carrito + formulario que abre WhatsApp (5491159524637) con el pedido escrito.
+- **Pedido online**: carrito + formulario que abre WhatsApp (5491159524637) con el pedido escrito,
+  y **pago online con Mercado Pago** para productos con precio fijo.
 
 Hecho con [Astro](https://astro.build) (sitio estático) y publicado en **Cloudflare Pages**.
 
@@ -71,15 +72,46 @@ Los originales están en `fotos-originales/`. Para agregar fotos nuevas:
 
 ### Medios de pago
 
-Hoy el cliente elige el medio de pago en el formulario y el pedido llega por WhatsApp indicándolo.
-Cuca responde confirmando el total y, según el caso, envía:
+El cliente elige en el formulario: **Mercado Pago, MODO, Cuenta DNI, transferencia o efectivo**.
 
-- **Mercado Pago**: link de pago creado desde la app de Mercado Pago (tarjetas, débito, dinero en cuenta).
-- **MODO**: QR de cobro (cualquier QR interoperable se puede pagar desde MODO o la app del banco).
+- **Mercado Pago online (integrado)**: si el pedido tiene sólo productos con precio fijo, aparece el botón
+  "Pagar $X con Mercado Pago". El cliente paga en Mercado Pago (tarjetas, débito o dinero en cuenta), vuelve al
+  sitio, el pago se verifica con Mercado Pago y se abre WhatsApp con el pedido marcado como **PAGADO**.
+  Si hay productos a consultar (se pesan o son a medida), se pide por WhatsApp y Cuca manda el link de pago.
+- **MODO**: QR de cobro (cualquier QR interoperable se paga desde MODO o la app del banco).
 - **Cuenta DNI (Banco Provincia)**: link de pago o QR desde la app *Cuenta DNI Comercios*.
 - **Transferencia**: completar `alias` en `negocio.json` para mostrarlo en el formulario.
 
-Pago online automático (cuando haya precios fijos): ver la sección "Próximos pasos" más abajo.
+---
+
+## Activar el cobro online con Mercado Pago
+
+El código ya está hecho (`functions/api/pagar.js` y `functions/api/pago.js`, Cloudflare Pages Functions).
+Para encenderlo **no hacen falta datos bancarios**: el dinero entra a la cuenta de Mercado Pago de Cuca
+(y de ahí se transfiere a su banco como siempre). Sólo se necesita el *Access Token* de esa cuenta:
+
+1. Con la cuenta de Mercado Pago del negocio, entrar a <https://www.mercadopago.com.ar/developers/panel/app>
+   → **Crear aplicación** → tipo *Pagos online* / **Checkout Pro**.
+2. En la aplicación, **Credenciales de producción** → copiar el **Access Token** (`APP_USR-...`).
+3. En Cloudflare → Workers & Pages → el proyecto → **Settings → Variables and Secrets** → agregar una variable
+   de tipo **Secret** llamada `MP_ACCESS_TOKEN` con ese valor (entorno *Production*). Nunca se sube al repositorio.
+4. Cargar precios fijos: en `productos.json` agregar `"precios": { "250 g": 4500, "500 g": 8800 }` al producto
+   (precio por presentación) y, en ofertas con precio cerrado, `"pagoOnline": true`.
+5. En `negocio.json` poner `"pagoOnline": { "mercadopago": true }`. Opcional: `"costoEnvio": 3000` para cobrar
+   el envío en el mismo pago (si queda en `null`, el envío se abona aparte).
+
+**Prueba antes de cobrar de verdad**: en la misma aplicación de Mercado Pago están las *Credenciales de prueba*.
+Cargando el Access Token de prueba (`TEST-...`) en el entorno *Preview* de Cloudflare, se puede pagar con las
+tarjetas de prueba de Mercado Pago sin mover dinero real.
+
+Pruebas automáticas (con Mercado Pago simulado):
+
+```bash
+node tools/pruebas/pago-funciones.mjs
+```
+
+Seguridad: los precios se recalculan en el servidor con los datos del sitio (el navegador no puede cambiarlos),
+el token vive sólo como secreto en Cloudflare y el pago se verifica contra la API de Mercado Pago al volver.
 
 ---
 
@@ -110,16 +142,11 @@ node tools/secciones.mjs http://localhost:4321/ capturas 390 844   # capturas po
 4. Cuando se registre **cucabuenosaires.com.ar**: Pages → Custom domains → agregar el dominio, y actualizar
    `site` en `astro.config.mjs`, `public/robots.txt` y `public/sitemap.xml`.
 
-## Próximos pasos: cobro online automático
+## Otros medios de cobro online
 
-Requiere precios cargados y cuentas de comercio. Propuesta:
-
-1. **Mercado Pago Checkout Pro** con una Cloudflare Pages Function (`functions/api/pagar.js`) que arma la
-   preferencia de pago con los precios del servidor (nunca los del navegador) usando el `MP_ACCESS_TOKEN`
-   guardado como variable secreta en Cloudflare, y un webhook que confirma el pago.
-2. **MODO** en el checkout: se suma como botón a través de un gateway compatible (Payway, Getnet, Mobbex, etc.)
-   con el SDK de MODO; requiere contrato con ese gateway.
-3. **Cuenta DNI**: no encontré una integración pública para tiendas web; se cobra con link de pago o QR desde Cuenta DNI Comercios.
+- **MODO** como botón en la web: se suma a través de un gateway compatible (Payway, Getnet, Mobbex, etc.)
+  con el SDK de MODO; requiere contrato con ese gateway.
+- **Cuenta DNI**: no encontré una integración pública para tiendas web; se cobra con link de pago o QR desde Cuenta DNI Comercios.
 
 ## Créditos
 

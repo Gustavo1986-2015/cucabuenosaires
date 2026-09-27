@@ -59,5 +59,7 @@
     "19:30 a 21:00"
   ],
   "alias": "",
-  "_ayuda_pagos": "Completar 'alias' con el alias/CBU de Cuca para mostrarlo en el pedido. Los pagos con link (Mercado Pago, Cuenta DNI) se envían por WhatsApp al confirmar el pedido."
+  "pagoOnline": { "mercadopago": false },
+  "costoEnvio": null,
+  "_ayuda_pagos": "Completar 'alias' con el alias/CBU de Cuca para mostrarlo en el pedido. Pago online: poner pagoOnline.mercadopago en true cuando MP_ACCESS_TOKEN esté cargado en Cloudflare; sólo se cobran online productos con 'precios' y ofertas con 'pagoOnline': true. 'costoEnvio' (número) se suma al pago online si el cliente elige envío; si es null, el envío se abona aparte."
 }

@@ -16,6 +16,7 @@ import negocio from '../data/negocio.json';
       <aside class="resumen textura-pizarra revelar">
         <h3 class="tiza">Tu pedido</h3>
         <ul class="res-items" data-res-items></ul>
+        <p class="res-total" data-res-total hidden></p>
         <p class="res-vacio" data-res-vacio>
           Todavía no agregaste productos. Podés sumarlos desde el catálogo o escribir abajo lo que querés.
         </p>
@@ -92,14 +93,31 @@ import negocio from '../data/negocio.json';
           <input id="p-notas" name="notas" placeholder="Timbre, alergias, cortes más finos, etc." />
         </div>
 
+        <div class="campo-full pago-online" data-pago-online hidden>
+          <p data-pago-online-txt></p>
+        </div>
+
         <div class="campo-full enviar">
           <span class="error general" data-error="general"></span>
-          <button type="submit" class="btn btn-wa btn-bloque grande"><Icono nombre="whatsapp" /> Enviar pedido por WhatsApp</button>
+          <button type="submit" name="accion" value="mp" class="btn btn-bloque grande btn-mp" data-btn-mp hidden>
+            <span data-btn-mp-txt>Pagar con Mercado Pago</span>
+          </button>
+          <button type="submit" name="accion" value="whatsapp" class="btn btn-wa btn-bloque grande" data-btn-wa><Icono nombre="whatsapp" /> <span data-btn-wa-txt>Enviar pedido por WhatsApp</span></button>
           <p class="legal">Se abre WhatsApp con tu pedido listo para enviar a Cuca ({negocio.telefono}). Tus datos quedan sólo en tu dispositivo.</p>
         </div>
       </form>
     </div>
   </div>
+
+  <dialog class="resultado-pago" data-resultado-pago aria-labelledby="rp-titulo">
+    <div class="rp-icono" data-rp-icono>⏳</div>
+    <h3 id="rp-titulo" data-rp-titulo>Verificando tu pago…</h3>
+    <p data-rp-texto>Un segundo, estamos confirmando con Mercado Pago.</p>
+    <div class="rp-acciones">
+      <a class="btn btn-wa btn-bloque" data-rp-wa href="#" target="_blank" rel="noopener" hidden><Icono nombre="whatsapp" /> Enviar mi pedido a Cuca</a>
+      <form method="dialog"><button class="btn btn-linea btn-bloque">Cerrar</button></form>
+    </div>
+  </dialog>
 </section>
 
 <style>
@@ -111,6 +129,10 @@ import negocio from '../data/negocio.json';
   .res-items :global(small) { display: block; color: var(--tiza-3); }
   .res-items :global(b) { font-family: var(--f-tiza); font-size: 1.5rem; color: var(--mostaza); line-height: 1; }
   .res-vacio { color: var(--tiza-3); margin: 0 0 12px; font-size: 0.93rem; }
+  .res-items :global(.precio-li) { display: block; font-family: var(--f-texto); font-size: 0.8rem; color: var(--tiza-2); text-align: right; font-weight: 700; }
+  .res-total { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; font-weight: 700; }
+  .res-total :global(strong) { margin-left: auto; font-family: var(--f-tiza); font-size: 2.2rem; color: var(--mostaza); line-height: 1; }
+  .res-total :global(small) { width: 100%; text-align: right; color: var(--tiza-3); font-weight: 500; }
   .res-link { font-weight: 700; color: var(--mostaza); font-size: 0.92rem; }
   .res-info { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--linea); display: grid; gap: 10px; }
   .res-info p { margin: 0; display: flex; gap: 10px; font-size: 0.86rem; color: var(--tiza-2); }
@@ -145,6 +167,20 @@ import negocio from '../data/negocio.json';
   .enviar { display: grid; gap: 10px; margin-top: 6px; }
   .grande { min-height: 58px; font-size: 1.05rem; }
   .legal { margin: 0; font-size: 0.78rem; color: var(--tiza-3); text-align: center; }
+  .btn-mp { --bg: #009ee3; --fg: #fff; box-shadow: 0 10px 30px -12px rgba(0, 158, 227, 0.7); }
+  .btn-mp:hover { background: #1bb0f0; }
+  .btn-mp[disabled] { opacity: 0.6; cursor: progress; }
+  .pago-online { padding: 14px 16px; border-radius: 14px; border: 1.5px solid rgba(0, 158, 227, 0.5); background: rgba(0, 158, 227, 0.08); }
+  .pago-online p { margin: 0; font-size: 0.9rem; color: var(--tiza-2); }
+  .pago-online :global(strong) { color: var(--tiza); }
+
+  .resultado-pago { border: 1px solid var(--linea-2); border-radius: 22px; background: var(--pizarra-2); color: var(--tiza); padding: 28px; width: min(440px, calc(100% - 32px)); text-align: center; }
+  .resultado-pago::backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
+  .rp-icono { font-size: 3rem; line-height: 1; }
+  .resultado-pago h3 { font-family: var(--f-display); font-size: 1.7rem; margin: 10px 0 8px; }
+  .resultado-pago p { color: var(--tiza-2); margin: 0 0 20px; }
+  .rp-acciones { display: grid; gap: 10px; }
+  .rp-acciones form { margin: 0; }
   .general { text-align: center; }
 
   @media (max-width: 900px) {
@@ -161,17 +197,25 @@ import negocio from '../data/negocio.json';
 
 <script>
   import negocio from '../data/negocio.json';
-  import { suscribir, mensajePedido, linkWhatsApp } from '../scripts/carrito.js';
+  import { suscribir, mensajePedido, linkWhatsApp, resumenTotal, precioItem, formatoPesos, obtenerItems, vaciar } from '../scripts/carrito.js';
 
   const form = document.querySelector<HTMLFormElement>('[data-form-pedido]')!;
+  const PAGO_ONLINE = negocio.pagoOnline?.mercadopago === true;
   const lista = document.querySelector<HTMLElement>('[data-res-items]')!;
   const vacio = document.querySelector<HTMLElement>('[data-res-vacio]')!;
   const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
+  const totalEl = document.querySelector<HTMLElement>('[data-res-total]')!;
   suscribir((items: any[]) => {
     vacio.hidden = items.length > 0;
-    lista.innerHTML = items.map((i) =>
-      `<li><span>${esc(i.nombre)}${i.opcion ? `<small>${esc(i.opcion)}</small>` : ''}</span><b>×${i.cant}</b></li>`).join('');
+    lista.innerHTML = items.map((i) => {
+      const p = precioItem(i);
+      return `<li><span>${esc(i.nombre)}${i.opcion ? `<small>${esc(i.opcion)}</small>` : ''}</span><span><b>×${i.cant}</b><span class="precio-li">${p != null ? formatoPesos(p * i.cant) : 'a consultar'}</span></span></li>`;
+    }).join('');
+    const { total, completo } = resumenTotal(items);
+    totalEl.hidden = total === 0;
+    totalEl.innerHTML = `<span>${completo ? 'Total' : 'Subtotal'}</span><strong>${formatoPesos(total)}</strong>${completo ? '' : '<small>+ productos a consultar por WhatsApp</small>'}`;
+    actualizarPagoOnline();
   });
 
   // Próximos días hábiles (martes a sábado), en hora de Buenos Aires
@@ -201,6 +245,7 @@ import negocio from '../data/negocio.json';
   form.addEventListener('change', (e) => {
     const t = e.target as HTMLInputElement;
     if (t.name === 'pago') detallePago.textContent = t.dataset.detalle || '';
+    actualizarPagoOnline();
   });
 
   // Recordar los datos del cliente en este dispositivo
@@ -214,6 +259,108 @@ import negocio from '../data/negocio.json';
   } catch { /* sin almacenamiento */ }
   actualizarEntrega();
 
+  // ---------- Pago online con Mercado Pago ----------
+  function actualizarPagoOnline() {
+    const panel = document.querySelector<HTMLElement>('[data-pago-online]');
+    if (!panel) return;
+    const txt = panel.querySelector<HTMLElement>('[data-pago-online-txt]')!;
+    const btnMp = document.querySelector<HTMLButtonElement>('[data-btn-mp]')!;
+    const btnWaTxt = document.querySelector<HTMLElement>('[data-btn-wa-txt]')!;
+    const elegido = (document.querySelector('input[name="pago"]:checked') as HTMLInputElement | null)?.value;
+    const activo = PAGO_ONLINE && elegido === 'Mercado Pago';
+    const { total, completo } = resumenTotal(obtenerItems());
+    panel.hidden = !activo;
+    btnMp.hidden = !(activo && completo);
+    document.querySelector<HTMLElement>('[data-pago-detalle]')!.hidden = activo;
+    btnWaTxt.textContent = activo && completo ? 'Prefiero que me manden el link por WhatsApp' : 'Enviar pedido por WhatsApp';
+    if (!activo) return;
+    const envio = (form.elements.namedItem('entrega') as RadioNodeList).value === 'envio';
+    const costoEnvio = Number(negocio.costoEnvio) || 0;
+    if (completo) {
+      const final = total + (envio ? costoEnvio : 0);
+      document.querySelector<HTMLElement>('[data-btn-mp-txt]')!.textContent = `Pagar ${formatoPesos(final)} con Mercado Pago`;
+      txt.innerHTML = `Pagá ahora con <strong>tarjeta de crédito, débito o dinero en cuenta</strong>. Después nos mandás el pedido pagado por WhatsApp.` +
+        (envio ? (costoEnvio ? ` Incluye envío (${formatoPesos(costoEnvio)}).` : ' <strong>El envío se abona aparte</strong> según la zona.') : '');
+    } else {
+      txt.innerHTML = obtenerItems().length
+        ? 'Tu pedido tiene productos <strong>sin precio fijo</strong> (se pesan o se arman a medida). Te confirmamos el total y te mandamos el link de pago por WhatsApp.'
+        : 'Agregá productos al pedido para pagar online, o escribinos y te mandamos el link de pago.';
+    }
+  }
+  form.addEventListener('change', actualizarPagoOnline);
+  actualizarPagoOnline();
+
+  const PENDIENTE = 'cuca-pago-pendiente';
+
+  async function iniciarPagoMP(d: Record<string, string>) {
+    const btn = document.querySelector<HTMLButtonElement>('[data-btn-mp]')!;
+    btn.disabled = true;
+    const txtBtn = document.querySelector<HTMLElement>('[data-btn-mp-txt]')!;
+    const antes = txtBtn.textContent;
+    txtBtn.textContent = 'Abriendo Mercado Pago…';
+    try {
+      const items = obtenerItems().map((i: any) => ({ id: i.id, opcion: i.opcion, cant: i.cant }));
+      const r = await fetch('/api/pagar', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ items, cliente: d }),
+      });
+      const res = await r.json().catch(() => ({}));
+      if (!r.ok || !res.url) throw new Error(res.mensaje || 'No pudimos iniciar el pago.');
+      try { localStorage.setItem(PENDIENTE, JSON.stringify({ ref: res.referencia, d, items: obtenerItems() })); } catch { /* nada */ }
+      location.href = res.url;
+    } catch (err: any) {
+      setError('general', `${err.message} Podés enviar el pedido por WhatsApp.`);
+      btn.disabled = false;
+      txtBtn.textContent = antes;
+    }
+  }
+
+  // Vuelta desde Mercado Pago: ?pago=ok|pendiente|error&payment_id=...&external_reference=...
+  (async () => {
+    const q = new URLSearchParams(location.search);
+    const estadoUrl = q.get('pago');
+    if (!estadoUrl) return;
+    const dlg = document.querySelector<HTMLDialogElement>('[data-resultado-pago]')!;
+    const $ = (s: string) => dlg.querySelector<HTMLElement>(s)!;
+    const waBtn = dlg.querySelector<HTMLAnchorElement>('[data-rp-wa]')!;
+    let pendiente: any = null;
+    try { pendiente = JSON.parse(localStorage.getItem(PENDIENTE) || 'null'); } catch { /* nada */ }
+    history.replaceState(null, '', location.pathname + '#pedido');
+    dlg.showModal();
+
+    const mostrar = (icono: string, titulo: string, texto: string, mensaje?: string) => {
+      $('[data-rp-icono]').textContent = icono;
+      $('[data-rp-titulo]').textContent = titulo;
+      $('[data-rp-texto]').textContent = texto;
+      waBtn.hidden = !mensaje;
+      if (mensaje) waBtn.href = linkWhatsApp(mensaje);
+    };
+
+    const id = q.get('payment_id') || q.get('collection_id') || '';
+    const ref = q.get('external_reference') || pendiente?.ref || '';
+    let verif: any = null;
+    if (id && /^\d+$/.test(id)) {
+      try { verif = await fetch(`/api/pago?id=${encodeURIComponent(id)}&ref=${encodeURIComponent(ref)}`).then((r) => (r.ok ? r.json() : null)); } catch { /* nada */ }
+    }
+    const estado = verif?.estado ?? (estadoUrl === 'error' ? 'rejected' : 'unknown');
+
+    if (estado === 'approved' && pendiente) {
+      mostrar('✅', '¡Pago aprobado!', `Recibimos ${formatoPesos(verif.monto)}. Último paso: mandanos el pedido por WhatsApp así coordinamos la entrega.`,
+        mensajePedido(pendiente.d, pendiente.items, { monto: verif.monto, operacion: verif.operacion }));
+      vaciar();
+      try { localStorage.removeItem(PENDIENTE); } catch { /* nada */ }
+    } else if (estado === 'pending' || estado === 'in_process' || estadoUrl === 'pendiente') {
+      mostrar('⏳', 'Tu pago está pendiente', 'Mercado Pago lo está procesando. Enviá el pedido por WhatsApp y te avisamos apenas se acredite.',
+        pendiente ? mensajePedido({ ...pendiente.d, notas: `${pendiente.d.notas || ''} (pago pendiente en Mercado Pago, operación ${id})`.trim() }, pendiente.items) : undefined);
+    } else if (estado === 'rejected' || estadoUrl === 'error') {
+      mostrar('⚠️', 'El pago no se completó', 'No se hizo ningún cobro. Podés intentar de nuevo o pedir por WhatsApp y pagar como prefieras.',
+        pendiente ? mensajePedido(pendiente.d, pendiente.items) : undefined);
+    } else {
+      mostrar('ℹ️', 'No pudimos verificar el pago', 'Si ya pagaste, mandanos el pedido por WhatsApp con el número de operación y lo revisamos.',
+        pendiente ? mensajePedido({ ...pendiente.d, notas: `${pendiente.d.notas || ''} (operación Mercado Pago ${id || 'sin número'})`.trim() }, pendiente.items) : undefined);
+    }
+  })();
+
   const setError = (campo: string, msg: string) => {
     const el = form.querySelector<HTMLElement>(`[data-error="${campo}"]`);
     if (el) el.textContent = msg;
@@ -222,7 +369,10 @@ import negocio from '../data/negocio.json';
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    let accion = ((e as SubmitEvent).submitter as HTMLButtonElement | null)?.value || 'whatsapp';
+    if (accion === 'mp' && document.querySelector<HTMLButtonElement>('[data-btn-mp]')!.hidden) accion = 'whatsapp';
     const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    delete d.accion;
     Object.keys(d).forEach((k) => (d[k] = d[k].trim()));
     let ok = true;
     ['nombre', 'telefono', 'direccion', 'general'].forEach((c) => setError(c, ''));
@@ -239,6 +389,7 @@ import negocio from '../data/negocio.json';
       localStorage.setItem(CLAVE, JSON.stringify(guardar));
     } catch { /* nada */ }
 
+    if (accion === 'mp') { iniciarPagoMP(d); return; }
     window.open(linkWhatsApp(mensajePedido(d)), '_blank', 'noopener');
   });
 </script>

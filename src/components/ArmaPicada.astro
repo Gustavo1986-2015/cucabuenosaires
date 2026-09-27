@@ -128,7 +128,7 @@ import Icono from './Icono.astro';
     position: sticky; top: calc(var(--header-h) + 16px); border-radius: 24px; overflow: hidden;
     border: 1px solid var(--linea-2); box-shadow: var(--sombra);
   }
-  .mini-3d { aspect-ratio: 16 / 11; background: radial-gradient(60% 60% at 50% 45%, rgba(227, 168, 43, 0.12), transparent 70%); }
+  .mini-3d { aspect-ratio: 4 / 3; background: radial-gradient(60% 60% at 50% 45%, rgba(227, 168, 43, 0.12), transparent 70%); }
   .mini-3d canvas { width: 100%; height: 100%; }
   .res-cuerpo { padding: 4px 26px 26px; }
   .res-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tiza-3); }
@@ -172,13 +172,24 @@ import Icono from './Icono.astro';
     quesera: { nombre: 'Quesera', incluye: 'roquefort al Malbec, ahumado, reggianito, provolone, uvas y nueces' },
   };
 
-  let escena: { setNivel: (n: number, orden?: number[]) => void } | null = null;
-  // Orden en que aparecen las piezas 3D según el estilo (ver picada3d.js)
-  const ORDEN_3D: Record<string, number[]> = {
-    clasica: [0, 1, 2, 3, 4, 5, 11, 12, 9, 8, 13, 14, 15, 6, 7, 10],
-    premium: [10, 1, 7, 2, 13, 0, 15, 6, 11, 12, 5, 3, 4, 14, 8, 9],
-    quesera: [0, 7, 4, 14, 6, 13, 2, 9, 8, 1, 11, 12, 3, 5, 15, 10],
+  let escena: { setNivel: (n: number, orden?: string[]) => void } | null = null;
+  // Orden en que aparecen los alimentos 3D según el estilo (ids de picada3d.js).
+  // Después de los 10 primeros se intercalan grupos de relleno para que la tabla se vea cada vez más cargada.
+  const RELLENOS = Array.from({ length: 8 }, (_, i) => `relleno${i + 1}`);
+  const intercalar = (lista: string[]) => {
+    const out = lista.slice(0, 10);
+    let r = 0;
+    lista.slice(10).forEach((id, i) => { out.push(id); if (i % 2 === 0 && r < RELLENOS.length) out.push(RELLENOS[r++]); });
+    return [...out, ...RELLENOS.slice(r)];
   };
+  const ORDEN_BASE: Record<string, string[]> = {
+    // Los 10 primeros cubren todo el contorno de la tabla para que nunca se vea vacía de un lado.
+    clasica: ['aceitunas', 'queso', 'salame', 'uvas', 'pepinillos', 'nueces', 'uvasVerdes', 'salame3', 'cocido', 'aceitunasSueltas', 'bastones', 'pan', 'tomates', 'salameEntero', 'cubos', 'quesoBlanco', 'grisines', 'salame2', 'romero', 'nueces2', 'cocido2', 'queso2', 'crudo', 'roquefort', 'crudo2', 'uvas2'],
+    premium: ['aceitunas', 'crudo', 'roquefort', 'uvas', 'pepinillos', 'nueces', 'salameEntero', 'queso2', 'salame', 'crudo2', 'uvasVerdes', 'bastones', 'quesoBlanco', 'pan', 'tomates', 'grisines', 'romero', 'salame2', 'queso', 'nueces2', 'aceitunasSueltas', 'cubos', 'salame3', 'cocido', 'cocido2', 'uvas2'],
+    quesera: ['aceitunas', 'queso', 'roquefort', 'uvas', 'pepinillos', 'nueces', 'bastones', 'cubos', 'nueces2', 'uvasVerdes', 'quesoBlanco', 'queso2', 'pan', 'romero', 'tomates', 'grisines', 'uvas2', 'salame', 'aceitunasSueltas', 'crudo', 'salame2', 'salameEntero', 'cocido', 'crudo2', 'salame3', 'cocido2'],
+  };
+  const ORDEN_3D = Object.fromEntries(Object.entries(ORDEN_BASE).map(([k, v]) => [k, intercalar(v)]));
+
   let resumen = '';
 
   const kg = (g: number) => (g >= 1000 ? `${(g / 1000).toFixed(1).replace('.', ',')} kg` : `${Math.round(g / 50) * 50} g`);
@@ -219,7 +230,7 @@ import Icono from './Icono.astro';
     elWa.href = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent(msg)}`;
 
     // Nivel de la tabla 3D según la cantidad de personas (2 → 4 piezas, 12+ → todas)
-    escena?.setNivel(Math.min(16, 4 + Math.ceil(personas * 1.2)), ORDEN_3D[fd.get('estilo') as string]);
+    escena?.setNivel(Math.min(34, 12 + Math.round(personas * 1.85)), ORDEN_3D[fd.get('estilo') as string]);
     rango.style.setProperty('--p', `${((personas - 2) / 38) * 100}%`);
   }
 

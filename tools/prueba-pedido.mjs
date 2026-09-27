@@ -25,14 +25,14 @@ await p.check('input[name="extra"][value="miga"]', { force: true });
 await p.click('[data-res-agregar]');
 const contador = await p.textContent('[data-contador]');
 // 4. Formulario vacío -> errores
-await p.click('[data-form-pedido] button[type=submit]');
+await p.click('[data-btn-wa]');
 const errNombre = await p.textContent('[data-error="nombre"]');
 // 5. Completar
 await p.fill('#p-nombre', 'Prueba Cuca');
 await p.fill('#p-tel', '11 5555-1234');
 await p.fill('#p-dir', 'Av. Rivadavia 8000');
 await p.fill('#p-notas', 'Timbre 3B');
-await p.click('[data-form-pedido] button[type=submit]');
+await p.click('[data-btn-wa]');
 const abiertos = await p.evaluate(() => window.__abiertos);
 const waPicada = await p.getAttribute('[data-res-wa]', 'href');
 console.log('contador:', contador, '| error nombre:', errNombre);

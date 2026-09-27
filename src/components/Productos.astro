@@ -4,6 +4,12 @@ import data from '../data/productos.json';
 
 const cats = data.categorias;
 const opcionesDe = (cat: string) => cats.find((c) => c.id === cat)?.opciones ?? [];
+const pesos = (n: number) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
+// Si hay "precios" por presentación, se muestra el de la primera; si no, el texto de "precio" o "Consultar".
+const precioInicial = (p: any, ops: string[]) => {
+  const v = p.precios?.[ops[0]];
+  return typeof v === 'number' ? pesos(v) : p.precio || 'Consultar';
+};
 ---
 <section class="seccion productos" id="productos">
   <div class="contenedor">
@@ -33,12 +39,12 @@ const opcionesDe = (cat: string) => cats.find((c) => c.id === cat)?.opciones ?? 
             <div class="card-cuerpo">
               <div class="card-top">
                 <h3>{p.nombre}</h3>
-                <span class="precio">{p.precio || 'Consultar'}</span>
+                <span class="precio" data-precio-de={selId}>{precioInicial(p, ops)}</span>
               </div>
               <p>{p.desc}</p>
               <div class="card-accion">
                 <label class="sr-only" for={selId}>Presentación de {p.nombre}</label>
-                <select id={selId} class="card-select">
+                <select id={selId} class="card-select" data-precios={p.precios ? JSON.stringify(p.precios) : undefined}>
                   {ops.map((o) => <option value={o}>{o}</option>)}
                 </select>
                 <button type="button" class="btn-agregar" data-agregar data-id={p.id} data-nombre={p.nombre} data-img={p.img} data-select={`#${selId}`} aria-label={`Agregar ${p.nombre} al pedido`}>
@@ -129,6 +135,16 @@ const opcionesDe = (cat: string) => cats.find((c) => c.id === cat)?.opciones ?? 
       if (ver) c.classList.add('visible');
     });
   }));
+
+  // Precio según la presentación elegida
+  const pesos = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+  document.querySelectorAll<HTMLSelectElement>('select[data-precios]').forEach((sel) => {
+    const precios = JSON.parse(sel.dataset.precios!);
+    const etiqueta = document.querySelector<HTMLElement>(`[data-precio-de="${sel.id}"]`)!;
+    const pintar = () => { const v = precios[sel.value]; etiqueta.textContent = typeof v === 'number' ? pesos.format(v) : 'Consultar'; };
+    sel.addEventListener('change', pintar);
+    pintar();
+  });
 
   // Inclinación 3D de las tarjetas con el mouse
   if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
