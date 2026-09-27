@@ -1,0 +1,125 @@
+---
+import Icono from './Icono.astro';
+import negocio from '../data/negocio.json';
+
+const bloques = [
+  {
+    id: 'miga',
+    img: 'miga.webp',
+    titulo: 'Sándwiches de miga',
+    tiza: '¡la especialidad!',
+    texto: 'Bien rellenos, como tienen que ser. El de roquefort, jamón y nuez es el más pedido del barrio (y los grandes, dicen, son los mejores).',
+    sabores: ['Jamón y queso', 'Roquefort, jamón y nuez', 'Surtidos', 'Triples'],
+    prodId: 'miga-surtidos',
+    prodNombre: 'Sándwiches de miga',
+  },
+  {
+    id: 'medialunas',
+    img: 'medialunas.webp',
+    titulo: 'Medialunas',
+    tiza: 'para el mate',
+    texto: 'Doraditas, por docena o media docena. Ideales para desayunos, meriendas y reuniones de oficina. Encargalas con anticipación para eventos.',
+    sabores: ['De manteca', 'De grasa', 'Rellenas de jamón y queso'],
+    prodId: 'medialunas-manteca',
+    prodNombre: 'Medialunas',
+  },
+];
+
+const waEvento = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent('¡Hola Cuca! 🎉 Quiero pedir presupuesto para un evento.\n\nFecha: \nCantidad de personas: \nQué necesito (picadas / miga / medialunas): ')}`;
+---
+<section class="seccion miga" id="miga">
+  <div class="contenedor">
+    <header class="cabecera-seccion">
+      <span class="eyebrow revelar">Recién hechos</span>
+      <h2 class="titulo revelar" data-delay="1">Miga <em>&</em> medialunas</h2>
+    </header>
+
+    <div class="bloques">
+      {bloques.map((b, i) => (
+        <article class:list={['bloque', { invertido: i % 2 === 1 }]}>
+          <div class="bloque-foto revelar">
+            <img src={`/img/${b.img}`} alt={b.titulo} width="900" height="700" loading="lazy" decoding="async" />
+            <span class="tiza bloque-tiza">{b.tiza}</span>
+          </div>
+          <div class="bloque-texto revelar" data-delay="1">
+            <h3>{b.titulo}</h3>
+            <p>{b.texto}</p>
+            <ul class="sabores">{b.sabores.map((s) => <li>{s}</li>)}</ul>
+            <div class="bloque-ctas">
+              <button type="button" class="btn" data-agregar data-id={b.prodId} data-nombre={b.prodNombre} data-img={b.img} data-opcion="Docena">
+                <Icono nombre="mas" /> Sumar una docena
+              </button>
+              <a class="btn btn-linea" href={`#productos`} data-ir-cat={b.id}>Ver variedades</a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="eventos textura-pizarra revelar" id="eventos">
+      <div class="eventos-texto">
+        <span class="eyebrow">Eventos y reuniones</span>
+        <h3>Bandejas listas <em>en tiempo récord</em></h3>
+        <p>Cumpleaños, despedidas, reuniones de trabajo. Armamos bandejas de picada, miga y medialunas con servicio completo.</p>
+        <ul class="eventos-lista">
+          <li><Icono nombre="check" /> Talitas, servilletas y tenedores de copetín incluidos</li>
+          <li><Icono nombre="check" /> Te asesoramos con las cantidades</li>
+          <li><Icono nombre="check" /> Envío a domicilio o retiro por el local</li>
+        </ul>
+        <a class="btn btn-wa" href={waEvento} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> Pedir presupuesto</a>
+      </div>
+      <div class="eventos-foto">
+        <img src="/img/picada-gourmet.webp" alt="Bandeja de picada con fiambres, quesos y frutas" width="900" height="700" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .miga { background: linear-gradient(180deg, var(--negro), var(--pizarra) 40%, var(--negro)); }
+  .bloques { display: grid; gap: clamp(48px, 7vw, 96px); }
+  .bloque { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 5vw, 72px); align-items: center; }
+  .bloque.invertido .bloque-foto { order: 2; }
+  .bloque-foto { position: relative; border-radius: 28px; overflow: visible; }
+  .bloque-foto img { width: 100%; aspect-ratio: 5 / 4; object-fit: cover; border-radius: 28px; box-shadow: var(--sombra); }
+  .bloque-tiza {
+    position: absolute; bottom: -18px; right: 24px; font-size: clamp(1.8rem, 3vw, 2.6rem); padding: 4px 18px;
+    background: var(--pizarra-2); border: 2px dashed var(--linea-2); border-radius: 14px; rotate: -4deg; color: var(--mostaza);
+  }
+  .invertido .bloque-tiza { right: auto; left: 24px; rotate: 3deg; color: var(--menta); }
+  .bloque-texto h3 { font-family: var(--f-display); font-weight: 900; font-size: clamp(2rem, 4vw, 3.2rem); margin: 0 0 14px; line-height: 1.05; }
+  .bloque-texto p { color: var(--tiza-2); margin: 0 0 18px; font-size: 1.05rem; }
+  .sabores { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 26px; }
+  .sabores li { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--linea-2); font-size: 0.88rem; font-weight: 600; }
+  .bloque-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .bloque-ctas :global(svg) { width: 18px; height: 18px; }
+
+  .eventos {
+    margin-top: clamp(64px, 9vw, 120px); display: grid; grid-template-columns: 1.1fr 1fr; border-radius: 28px; overflow: hidden;
+    border: 1px solid var(--linea-2);
+  }
+  .eventos-texto { padding: clamp(26px, 5vw, 56px); }
+  .eventos-texto h3 { font-family: var(--f-display); font-weight: 900; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.05; margin: 12px 0 14px; }
+  .eventos-texto h3 em { color: var(--mostaza); font-weight: 700; }
+  .eventos-texto p { color: var(--tiza-2); margin: 0 0 18px; }
+  .eventos-lista { list-style: none; padding: 0; margin: 0 0 26px; display: grid; gap: 10px; }
+  .eventos-lista li { display: flex; gap: 10px; align-items: center; font-weight: 600; }
+  .eventos-lista :global(svg) { width: 20px; height: 20px; color: var(--menta); flex: none; }
+  .eventos-foto img { width: 100%; height: 100%; object-fit: cover; min-height: 280px; }
+
+  @media (max-width: 860px) {
+    .bloque, .eventos { grid-template-columns: 1fr; }
+    .bloque.invertido .bloque-foto { order: 0; }
+    .eventos-foto { order: -1; }
+    .eventos-foto img { max-height: 280px; }
+  }
+</style>
+
+<script>
+  // "Ver variedades" filtra el catálogo por categoría
+  document.querySelectorAll<HTMLAnchorElement>('[data-ir-cat]').forEach((a) =>
+    a.addEventListener('click', () => {
+      document.querySelector<HTMLButtonElement>(`[data-filtro="${a.dataset.irCat}"]`)?.click();
+    }),
+  );
+</script>

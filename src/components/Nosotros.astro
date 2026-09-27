@@ -1,0 +1,78 @@
+---
+import Icono from './Icono.astro';
+import LogoCK from './LogoCK.astro';
+
+const valores = [
+  { icono: 'mano', titulo: 'Probá antes de comprar', texto: 'Te damos a degustar y te explicamos cada producto. Sin apuro.' },
+  { icono: 'cuchillo', titulo: 'Cortado en el momento', texto: 'Fiambres y quesos seleccionados, frescos y bien conservados.' },
+  { icono: 'regalo', titulo: 'Detalles que se notan', texto: 'Picadas prolijas, bien presentadas y con todo lo necesario.' },
+];
+---
+<section class="seccion nosotros" id="nosotros">
+  <div class="contenedor nos-grid">
+    <div class="nos-fotos revelar">
+      <figure class="foto-fachada">
+        <img src="/img/local-fachada.webp" alt="Fachada de Cuca en San Blas 4101: carteles de Quesos y Fiambres y pizarras con ofertas" width="1360" height="1020" loading="lazy" />
+        <figcaption class="tiza">San Blas 4101 · Floresta</figcaption>
+      </figure>
+      <div class="sello" aria-hidden="true">
+        <LogoCK class="sello-ck" />
+        <svg viewBox="0 0 200 200" class="sello-txt"><defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs><text><textPath href="#circ">QUESOS · FIAMBRES · PICADAS · FLORESTA · </textPath></text></svg>
+      </div>
+    </div>
+
+    <div class="nos-texto">
+      <span class="eyebrow revelar">Nosotros</span>
+      <h2 class="titulo revelar" data-delay="1">Un negocio de familia, <em>con alma de barrio</em></h2>
+      <p class="bajada revelar" data-delay="2">
+        Cuca es la fiambrería de Floresta que atienden sus propios dueños. Elegimos cada queso y cada fiambre
+        para que no tengas que irte lejos para comer rico: calidad gourmet a precios de barrio.
+      </p>
+      <p class="bajada revelar" data-delay="2">
+        Además de fiambres y quesos, somos autoservicio: bebidas, vinos, almacén y artículos varios.
+        Y todos los viernes y sábados traemos <strong>sabores nuevos para probar</strong>.
+      </p>
+      <ul class="valores">
+        {valores.map((v, i) => (
+          <li class="revelar" data-delay={String(i + 1)}>
+            <span class="valor-ico"><Icono nombre={v.icono} /></span>
+            <div><strong>{v.titulo}</strong><p>{v.texto}</p></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .nos-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .nos-fotos { position: relative; }
+  .foto-fachada { margin: 0; position: relative; border-radius: 28px; overflow: hidden; box-shadow: var(--sombra); rotate: -1.5deg; }
+  .foto-fachada img { width: 100%; aspect-ratio: 4 / 4.2; object-fit: cover; }
+  .foto-fachada figcaption {
+    position: absolute; left: 16px; bottom: 14px; font-size: 1.9rem; padding: 2px 16px; border-radius: 12px;
+    background: rgba(13, 13, 12, 0.75); backdrop-filter: blur(6px);
+  }
+  .sello {
+    position: absolute; right: -24px; top: -28px; width: 150px; height: 150px; border-radius: 50%;
+    background: var(--mostaza); color: var(--negro); display: grid; place-items: center; box-shadow: var(--sombra);
+    animation: girar 22s linear infinite;
+  }
+  .sello :global(.sello-ck) { width: 58px; animation: girar 22s linear infinite reverse; }
+  .sello-txt { position: absolute; inset: 0; width: 100%; height: 100%; font-family: var(--f-texto); font-weight: 800; font-size: 15px; letter-spacing: 3.5px; fill: var(--negro); }
+  @keyframes girar { to { rotate: 360deg; } }
+
+  .valores { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
+  .valores li { display: flex; gap: 16px; align-items: flex-start; padding: 16px; border-radius: 16px; border: 1px solid var(--linea); background: rgba(243, 239, 230, 0.02); }
+  .valor-ico { flex: none; width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: rgba(227, 168, 43, 0.14); color: var(--mostaza); }
+  .valores strong { font-family: var(--f-display); font-size: 1.1rem; }
+  .valores p { margin: 2px 0 0; color: var(--tiza-3); font-size: 0.92rem; }
+  .nos-texto .bajada + .bajada { margin-top: 14px; }
+
+  @media (max-width: 900px) {
+    .nos-grid { grid-template-columns: 1fr; }
+    .sello { width: 112px; height: 112px; right: -6px; top: -20px; }
+    .sello :global(.sello-ck) { width: 44px; }
+    .sello-txt { font-size: 14px; }
+  }
+</style>

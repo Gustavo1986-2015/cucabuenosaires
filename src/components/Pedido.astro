@@ -1,0 +1,207 @@
+---
+import Icono from './Icono.astro';
+import negocio from '../data/negocio.json';
+---
+<section class="seccion pedido" id="pedido">
+  <div class="contenedor">
+    <header class="cabecera-seccion centro">
+      <span class="eyebrow revelar">Pedido online</span>
+      <h2 class="titulo revelar" data-delay="1">Hacé tu pedido <em>en 1 minuto</em></h2>
+      <p class="bajada revelar" data-delay="2">
+        Completá tus datos y te abrimos WhatsApp con el pedido ya escrito. Nosotros te confirmamos precio, envío y horario.
+      </p>
+    </header>
+
+    <div class="pedido-grid">
+      <aside class="resumen textura-pizarra revelar">
+        <h3 class="tiza">Tu pedido</h3>
+        <ul class="res-items" data-res-items></ul>
+        <p class="res-vacio" data-res-vacio>
+          Todavía no agregaste productos. Podés sumarlos desde el catálogo o escribir abajo lo que querés.
+        </p>
+        <a href="#productos" class="res-link">+ Agregar productos</a>
+        <div class="res-info">
+          <p><Icono nombre="camion" /> {negocio.envios}</p>
+          <p><Icono nombre="reloj" /> Martes a sábado de 9:30 a 13:30 y de 17:30 a 21 h.</p>
+        </div>
+      </aside>
+
+      <form class="form revelar" data-delay="1" data-form-pedido novalidate>
+        <div class="campo campo-full">
+          <label for="p-detalle">¿Qué querés pedir? <span class="opc">(opcional si ya armaste el pedido)</span></label>
+          <textarea id="p-detalle" name="detalle" placeholder="Ej: picada para 6, 1 docena de miga de jamón y queso, 250 g de queso ahumado…"></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="p-nombre">Nombre</label>
+          <input id="p-nombre" name="nombre" autocomplete="name" required placeholder="¿Cómo te llamás?" />
+          <span class="error" data-error="nombre"></span>
+        </div>
+        <div class="campo">
+          <label for="p-tel">Teléfono</label>
+          <input id="p-tel" name="telefono" type="tel" inputmode="tel" autocomplete="tel" required placeholder="11 1234-5678" />
+          <span class="error" data-error="telefono"></span>
+        </div>
+
+        <div class="campo campo-full">
+          <span class="etiqueta" id="p-entrega-lbl">Entrega</span>
+          <div class="segmentado" role="radiogroup" aria-labelledby="p-entrega-lbl">
+            <label><input type="radio" name="entrega" value="envio" checked /><span><Icono nombre="camion" /> Envío a domicilio</span></label>
+            <label><input type="radio" name="entrega" value="retiro" /><span><Icono nombre="pin" /> Retiro en el local</span></label>
+          </div>
+        </div>
+
+        <div class="campo" data-solo-envio>
+          <label for="p-dir">Dirección</label>
+          <input id="p-dir" name="direccion" autocomplete="street-address" placeholder="Calle, número, piso/depto" />
+          <span class="error" data-error="direccion"></span>
+        </div>
+        <div class="campo" data-solo-envio>
+          <label for="p-entre">Entre calles <span class="opc">(opcional)</span></label>
+          <input id="p-entre" name="entreCalles" placeholder="Ej: Bahía Blanca y Mercedes" />
+        </div>
+
+        <div class="campo">
+          <label for="p-dia">Día</label>
+          <select id="p-dia" name="dia" required data-dias></select>
+          <span class="error" data-error="dia"></span>
+        </div>
+        <div class="campo">
+          <label for="p-franja">Horario</label>
+          <select id="p-franja" name="franja">
+            {negocio.franjasEntrega.map((f) => <option value={f}>{f} h</option>)}
+          </select>
+        </div>
+
+        <div class="campo campo-full">
+          <label for="p-pago">Forma de pago</label>
+          <select id="p-pago" name="pago">
+            {negocio.pagos.map((p) => <option value={p}>{p}</option>)}
+          </select>
+        </div>
+
+        <div class="campo campo-full">
+          <label for="p-notas">Notas <span class="opc">(opcional)</span></label>
+          <input id="p-notas" name="notas" placeholder="Timbre, alergias, cortes más finos, etc." />
+        </div>
+
+        <div class="campo-full enviar">
+          <span class="error general" data-error="general"></span>
+          <button type="submit" class="btn btn-wa btn-bloque grande"><Icono nombre="whatsapp" /> Enviar pedido por WhatsApp</button>
+          <p class="legal">Se abre WhatsApp con tu pedido listo para enviar a Cuca ({negocio.telefono}). Tus datos quedan sólo en tu dispositivo.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pedido-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(20px, 3vw, 36px); align-items: start; }
+  .resumen { position: sticky; top: calc(var(--header-h) + 16px); border-radius: 24px; padding: 26px; border: 1px solid var(--linea-2); }
+  .resumen h3 { margin: 0 0 12px; font-size: 2.6rem; line-height: 1; }
+  .res-items { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
+  .res-items :global(li) { display: flex; justify-content: space-between; gap: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--linea-2); font-size: 0.95rem; }
+  .res-items :global(small) { display: block; color: var(--tiza-3); }
+  .res-items :global(b) { font-family: var(--f-tiza); font-size: 1.5rem; color: var(--mostaza); line-height: 1; }
+  .res-vacio { color: var(--tiza-3); margin: 0 0 12px; font-size: 0.93rem; }
+  .res-link { font-weight: 700; color: var(--mostaza); font-size: 0.92rem; }
+  .res-info { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--linea); display: grid; gap: 10px; }
+  .res-info p { margin: 0; display: flex; gap: 10px; font-size: 0.86rem; color: var(--tiza-2); }
+  .res-info :global(svg) { width: 18px; height: 18px; flex: none; color: var(--menta); margin-top: 2px; }
+
+  .form {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: clamp(20px, 3vw, 32px); border-radius: 24px;
+    background: var(--pizarra-2); border: 1px solid var(--linea);
+  }
+  .campo-full { grid-column: 1 / -1; }
+  .opc { font-weight: 500; color: var(--tiza-3); }
+  .segmentado :global(svg) { width: 18px; height: 18px; }
+  .enviar { display: grid; gap: 10px; margin-top: 6px; }
+  .grande { min-height: 58px; font-size: 1.05rem; }
+  .legal { margin: 0; font-size: 0.78rem; color: var(--tiza-3); text-align: center; }
+  .general { text-align: center; }
+
+  @media (max-width: 900px) {
+    .pedido-grid { grid-template-columns: 1fr; }
+    .resumen { position: relative; top: 0; }
+  }
+  @media (max-width: 560px) {
+    .form { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  import negocio from '../data/negocio.json';
+  import { suscribir, mensajePedido, linkWhatsApp } from '../scripts/carrito.js';
+
+  const form = document.querySelector<HTMLFormElement>('[data-form-pedido]')!;
+  const lista = document.querySelector<HTMLElement>('[data-res-items]')!;
+  const vacio = document.querySelector<HTMLElement>('[data-res-vacio]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  suscribir((items: any[]) => {
+    vacio.hidden = items.length > 0;
+    lista.innerHTML = items.map((i) =>
+      `<li><span>${esc(i.nombre)}${i.opcion ? `<small>${esc(i.opcion)}</small>` : ''}</span><b>×${i.cant}</b></li>`).join('');
+  });
+
+  // Próximos días hábiles (martes a sábado), en hora de Buenos Aires
+  const selDia = form.querySelector<HTMLSelectElement>('[data-dias]')!;
+  const fmt = new Intl.DateTimeFormat('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', weekday: 'long', day: 'numeric', month: 'long' });
+  const diaSemana = (d: Date) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Argentina/Buenos_Aires', weekday: 'short' }).format(d));
+  const hora = Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Argentina/Buenos_Aires', hour: 'numeric', hourCycle: 'h23' }).format(new Date()));
+  const opciones: string[] = [];
+  for (let i = 0; opciones.length < 8 && i < 14; i++) {
+    const d = new Date(Date.now() + i * 86400000);
+    if (!negocio.horarios[diaSemana(d)].turnos.length) continue;
+    if (i === 0 && hora >= 20) continue; // hoy ya casi cerramos
+    const txt = fmt.format(d);
+    opciones.push(i === 0 ? `Hoy, ${txt}` : i === 1 ? `Mañana, ${txt}` : txt.charAt(0).toUpperCase() + txt.slice(1));
+  }
+  selDia.innerHTML = opciones.map((o) => `<option value="${o}">${o}</option>`).join('');
+
+  // Mostrar u ocultar la dirección
+  const actualizarEntrega = () => {
+    const envio = (form.elements.namedItem('entrega') as RadioNodeList).value === 'envio';
+    form.querySelectorAll<HTMLElement>('[data-solo-envio]').forEach((el) => (el.hidden = !envio));
+  };
+  form.addEventListener('change', actualizarEntrega);
+
+  // Recordar los datos del cliente en este dispositivo
+  const CLAVE = 'cuca-cliente-v1';
+  const recordar = ['nombre', 'telefono', 'direccion', 'entreCalles', 'pago'];
+  try {
+    const guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}');
+    recordar.forEach((k) => { const el = form.elements.namedItem(k) as HTMLInputElement | null; if (el && guardado[k]) el.value = guardado[k]; });
+    if (guardado.entrega) (form.querySelector(`input[name="entrega"][value="${guardado.entrega}"]`) as HTMLInputElement | null)?.click();
+  } catch { /* sin almacenamiento */ }
+  actualizarEntrega();
+
+  const setError = (campo: string, msg: string) => {
+    const el = form.querySelector<HTMLElement>(`[data-error="${campo}"]`);
+    if (el) el.textContent = msg;
+    el?.closest('.campo')?.classList.toggle('invalido', !!msg);
+  };
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    Object.keys(d).forEach((k) => (d[k] = d[k].trim()));
+    let ok = true;
+    ['nombre', 'telefono', 'direccion', 'general'].forEach((c) => setError(c, ''));
+    if (d.nombre.length < 2) { setError('nombre', 'Contanos tu nombre.'); ok = false; }
+    if (d.telefono.replace(/\D/g, '').length < 8) { setError('telefono', 'Revisá el teléfono.'); ok = false; }
+    if (d.entrega === 'envio' && d.direccion.length < 4) { setError('direccion', 'Necesitamos la dirección para el envío.'); ok = false; }
+    const hayItems = lista.children.length > 0;
+    if (!hayItems && d.detalle.length < 3) { setError('general', 'Agregá productos o escribí qué querés pedir.'); ok = false; }
+    if (!ok) { form.querySelector<HTMLElement>('.invalido input, .invalido select')?.focus(); return; }
+
+    try {
+      const guardar: Record<string, string> = { entrega: d.entrega };
+      recordar.forEach((k) => (guardar[k] = d[k] || ''));
+      localStorage.setItem(CLAVE, JSON.stringify(guardar));
+    } catch { /* nada */ }
+
+    window.open(linkWhatsApp(mensajePedido(d)), '_blank', 'noopener');
+  });
+</script>

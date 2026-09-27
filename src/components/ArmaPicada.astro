@@ -1,0 +1,248 @@
+---
+import Icono from './Icono.astro';
+---
+<section class="seccion picada" id="picada">
+  <div class="contenedor">
+    <header class="cabecera-seccion centro">
+      <span class="eyebrow revelar">Configurador</span>
+      <h2 class="titulo revelar" data-delay="1">Armá tu <em>picada</em></h2>
+      <p class="bajada revelar" data-delay="2">
+        Decinos cuántos son y qué ocasión es: te sugerimos el tamaño, las cantidades y lo mandás directo a Cuca.
+      </p>
+    </header>
+
+    <div class="arma revelar">
+      <form class="arma-form" data-arma onsubmit="return false">
+        <fieldset class="paso">
+          <legend><span class="num">1</span> ¿Cuántos son?</legend>
+          <div class="contador-personas">
+            <button type="button" data-personas="-1" aria-label="Menos personas"><Icono nombre="menos" /></button>
+            <output class="tiza" data-personas-out aria-live="polite">6</output>
+            <button type="button" data-personas="1" aria-label="Más personas"><Icono nombre="mas" /></button>
+          </div>
+          <input type="range" min="2" max="40" value="6" step="1" data-personas-rango aria-label="Cantidad de personas" />
+        </fieldset>
+
+        <fieldset class="paso">
+          <legend><span class="num">2</span> ¿Para qué momento?</legend>
+          <div class="segmentado">
+            <label><input type="radio" name="momento" value="principal" checked /><span>Comida principal</span></label>
+            <label><input type="radio" name="momento" value="previa" /><span>Previa / entrada</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="paso">
+          <legend><span class="num">3</span> Elegí el estilo</legend>
+          <div class="estilos">
+            <label class="estilo">
+              <input type="radio" name="estilo" value="clasica" checked />
+              <span><strong>Clásica</strong><small>Jamón cocido, salame, cremoso, pategrás, aceitunas y pan.</small></span>
+            </label>
+            <label class="estilo">
+              <input type="radio" name="estilo" value="premium" />
+              <span><strong>Premium</strong><small>Crudo, bondiola, salame de campo, ahumado, roquefort y frutos secos.</small></span>
+            </label>
+            <label class="estilo">
+              <input type="radio" name="estilo" value="quesera" />
+              <span><strong>Quesera</strong><small>Roquefort al Malbec, ahumado, reggianito, provolone, uvas y nueces.</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="paso">
+          <legend><span class="num">4</span> Sumale</legend>
+          <div class="extras">
+            <label class="extra"><input type="checkbox" name="extra" value="miga" /><span>Sándwiches de miga</span></label>
+            <label class="extra"><input type="checkbox" name="extra" value="medialunas" /><span>Medialunas</span></label>
+            <label class="extra"><input type="checkbox" name="extra" value="aceitunas" checked /><span>Aceitunas griegas</span></label>
+            <label class="extra"><input type="checkbox" name="extra" value="vino" /><span>Vino</span></label>
+            <label class="extra"><input type="checkbox" name="extra" value="servicio" /><span>Servicio completo (talitas, servilletas, tenedores)</span></label>
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="arma-resultado textura-pizarra" aria-live="polite">
+        <div class="mini-3d" data-escena-picada>
+          <canvas aria-label="Vista 3D de tu picada" role="img"></canvas>
+        </div>
+        <div class="res-cuerpo">
+          <span class="res-label">Tu picada sugerida</span>
+          <h3 class="tiza res-tamano" data-res-tamano>Mediana</h3>
+          <p class="res-gramos" data-res-gramos>≈ 1,2 kg de fiambres y quesos</p>
+          <ul class="res-lista" data-res-lista></ul>
+          <div class="res-ctas">
+            <button type="button" class="btn btn-bloque" data-res-agregar><Icono nombre="carrito" /> Agregar al pedido</button>
+            <a class="btn btn-wa btn-bloque" data-res-wa href="#" target="_blank" rel="noopener"><Icono nombre="whatsapp" /> Pedirla ya por WhatsApp</a>
+          </div>
+          <p class="res-nota">Cantidades orientativas: en Cuca la ajustamos con vos.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .arma { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(20px, 3vw, 40px); align-items: start; }
+  .arma-form { display: grid; gap: 14px; }
+  .paso { margin: 0; border: 1px solid var(--linea); border-radius: var(--radio); padding: 20px 22px 22px; background: rgba(243, 239, 230, 0.025); min-width: 0; }
+  .paso legend { padding: 0 8px; margin-left: -8px; font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; }
+  .num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--mostaza); color: var(--negro); font-family: var(--f-texto); font-weight: 800; font-size: 0.85rem; }
+
+  .contador-personas { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 8px 0 12px; }
+  .contador-personas button {
+    width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--linea-2); background: transparent; color: var(--tiza);
+    display: grid; place-items: center; transition: background 0.2s, transform 0.15s;
+  }
+  .contador-personas button:hover { background: rgba(243, 239, 230, 0.1); }
+  .contador-personas button:active { transform: scale(0.92); }
+  .contador-personas output { font-size: 4.6rem; line-height: 1; min-width: 2.2ch; text-align: center; color: var(--mostaza); }
+  .contador-personas output::after { content: " personas"; font-size: 1.6rem; color: var(--tiza-2); }
+
+  input[type="range"] { width: 100%; accent-color: var(--mostaza); height: 28px; }
+
+  .estilos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 6px; }
+  .estilo { position: relative; }
+  .estilo input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .estilo span {
+    display: grid; gap: 4px; height: 100%; padding: 14px; border-radius: 14px; border: 1.5px solid var(--linea);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .estilo strong { font-family: var(--f-display); font-size: 1.1rem; }
+  .estilo small { color: var(--tiza-3); font-size: 0.8rem; line-height: 1.4; }
+  .estilo input:checked + span { border-color: var(--mostaza); background: rgba(227, 168, 43, 0.1); }
+  .estilo input:focus-visible + span { outline: 2px solid var(--mostaza); outline-offset: 2px; }
+
+  .extras { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .extra { position: relative; }
+  .extra input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .extra span {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px; border-radius: 999px;
+    border: 1.5px solid var(--linea-2); font-weight: 600; font-size: 0.88rem; color: var(--tiza-2); transition: all 0.2s;
+  }
+  .extra span::before { content: "+"; font-weight: 800; }
+  .extra input:checked + span { background: var(--tiza); color: var(--negro); border-color: var(--tiza); }
+  .extra input:checked + span::before { content: "✓"; }
+  .extra input:focus-visible + span { outline: 2px solid var(--mostaza); outline-offset: 2px; }
+
+  .arma-resultado {
+    position: sticky; top: calc(var(--header-h) + 16px); border-radius: 24px; overflow: hidden;
+    border: 1px solid var(--linea-2); box-shadow: var(--sombra);
+  }
+  .mini-3d { aspect-ratio: 16 / 10; background: radial-gradient(60% 60% at 50% 45%, rgba(227, 168, 43, 0.12), transparent 70%); }
+  .mini-3d canvas { width: 100%; height: 100%; }
+  .res-cuerpo { padding: 4px 26px 26px; }
+  .res-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tiza-3); }
+  .res-tamano { margin: 2px 0 0; font-size: clamp(3rem, 5vw, 4rem); line-height: 1; color: var(--mostaza); }
+  .res-gramos { margin: 4px 0 14px; font-weight: 700; color: var(--tiza); }
+  .res-lista { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 7px; }
+  .res-lista :global(li) { display: flex; gap: 10px; align-items: baseline; color: var(--tiza-2); font-size: 0.93rem; }
+  .res-lista :global(li)::before { content: "✦"; color: var(--mostaza); font-size: 0.8rem; }
+  .res-lista :global(strong) { color: var(--tiza); }
+  .res-ctas { display: grid; gap: 10px; }
+  .res-nota { margin: 12px 0 0; font-size: 0.8rem; color: var(--tiza-3); text-align: center; }
+
+  @media (max-width: 980px) {
+    .arma { grid-template-columns: 1fr; }
+    .arma-resultado { position: relative; top: 0; order: -1; }
+  }
+  @media (max-width: 620px) {
+    .estilos { grid-template-columns: 1fr; }
+    .contador-personas output { font-size: 3.8rem; }
+    .contador-personas output::after { font-size: 1.3rem; }
+    .paso { padding: 16px; }
+  }
+</style>
+
+<script>
+  import negocio from '../data/negocio.json';
+  import { agregarAlCarrito } from '../scripts/carrito.js';
+
+  const form = document.querySelector<HTMLFormElement>('[data-arma]')!;
+  const out = form.querySelector<HTMLOutputElement>('[data-personas-out]')!;
+  const rango = form.querySelector<HTMLInputElement>('[data-personas-rango]')!;
+  const elTam = document.querySelector('[data-res-tamano]')!;
+  const elGr = document.querySelector('[data-res-gramos]')!;
+  const elLista = document.querySelector('[data-res-lista]')!;
+  const elWa = document.querySelector<HTMLAnchorElement>('[data-res-wa]')!;
+  const btnAgregar = document.querySelector<HTMLButtonElement>('[data-res-agregar]')!;
+
+  const ESTILOS: Record<string, { nombre: string; incluye: string }> = {
+    clasica: { nombre: 'Clásica', incluye: 'jamón cocido, salame, queso cremoso, pategrás, aceitunas y pan' },
+    premium: { nombre: 'Premium', incluye: 'jamón crudo, bondiola, salame de campo, queso ahumado, roquefort y frutos secos' },
+    quesera: { nombre: 'Quesera', incluye: 'roquefort al Malbec, ahumado, reggianito, provolone, uvas y nueces' },
+  };
+
+  let escena: { setNivel: (n: number) => void } | null = null;
+  let resumen = '';
+
+  const kg = (g: number) => (g >= 1000 ? `${(g / 1000).toFixed(1).replace('.', ',')} kg` : `${Math.round(g / 50) * 50} g`);
+
+  function calcular() {
+    const personas = Number(rango.value);
+    const fd = new FormData(form);
+    const momento = fd.get('momento') as string;
+    const estilo = ESTILOS[fd.get('estilo') as string];
+    const extras = fd.getAll('extra') as string[];
+
+    const gpp = momento === 'principal' ? 200 : 110;
+    const total = personas * gpp;
+    let tamano = 'Chica';
+    if (personas > 3) tamano = 'Mediana';
+    if (personas > 6) tamano = 'Grande';
+    if (personas > 10) tamano = `Bandejas (${Math.ceil(personas / 8)})`;
+
+    const lineas: string[] = [];
+    lineas.push(`<li><span>Estilo <strong>${estilo.nombre}</strong>: ${estilo.incluye}.</span></li>`);
+    lineas.push(`<li><span><strong>${kg(total * 0.55)}</strong> de fiambres y <strong>${kg(total * 0.45)}</strong> de quesos.</span></li>`);
+    const txtExtras: string[] = [];
+    if (extras.includes('miga')) { const d = Math.max(1, Math.ceil((personas * (momento === 'principal' ? 3 : 2)) / 12)); txtExtras.push(`${d} docena${d > 1 ? 's' : ''} de sándwiches de miga`); }
+    if (extras.includes('medialunas')) { const d = Math.max(1, Math.ceil((personas * 2) / 12)); txtExtras.push(`${d} docena${d > 1 ? 's' : ''} de medialunas`); }
+    if (extras.includes('aceitunas')) txtExtras.push(`${kg(Math.max(150, personas * 30))} de aceitunas griegas`);
+    if (extras.includes('vino')) { const b = Math.max(1, Math.ceil(personas / 3)); txtExtras.push(`${b} botella${b > 1 ? 's' : ''} de vino`); }
+    if (extras.includes('servicio')) txtExtras.push('servicio completo: talitas, servilletas y tenedores de copetín');
+    txtExtras.forEach((t) => lineas.push(`<li><span>${t.charAt(0).toUpperCase() + t.slice(1)}.</span></li>`));
+
+    out.value = String(personas);
+    elTam.textContent = tamano;
+    elGr.textContent = `≈ ${kg(total)} de fiambres y quesos para ${personas} personas`;
+    elLista.innerHTML = lineas.join('');
+
+    resumen = `Picada ${estilo.nombre} ${tamano} para ${personas} personas (${momento === 'principal' ? 'comida principal' : 'previa'})` +
+      (txtExtras.length ? ` + ${txtExtras.join(', ')}` : '');
+    const msg = `¡Hola Cuca! 🧀 Quiero encargar una picada:\n\n• ${resumen}\n\n¿Me pasan precio y disponibilidad? ¡Gracias!`;
+    elWa.href = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent(msg)}`;
+
+    // Nivel de la tabla 3D según la cantidad de personas (2 → 4 piezas, 12+ → todas)
+    escena?.setNivel(Math.min(10, 3 + Math.ceil(personas / 1.6)));
+    rango.style.setProperty('--p', `${((personas - 2) / 38) * 100}%`);
+  }
+
+  form.querySelectorAll<HTMLButtonElement>('[data-personas]').forEach((b) =>
+    b.addEventListener('click', () => {
+      rango.value = String(Math.min(40, Math.max(2, Number(rango.value) + Number(b.dataset.personas))));
+      calcular();
+    }),
+  );
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+
+  btnAgregar.addEventListener('click', () => {
+    agregarAlCarrito({ id: 'picada-a-medida', nombre: 'Picada a medida', opcion: resumen.replace(/^Picada /, ''), img: 'picada-dark.webp' }, btnAgregar);
+  });
+
+  calcular();
+
+  // Carga diferida de la escena 3D cuando la sección se acerca
+  const cont = document.querySelector<HTMLElement>('[data-escena-picada]')!;
+  const io = new IntersectionObserver(async ([en]) => {
+    if (!en.isIntersecting) return;
+    io.disconnect();
+    if (!document.createElement('canvas').getContext('webgl2')) { cont.classList.add('sin-3d'); return; }
+    try {
+      const { montarPicada } = await import('../scripts/picada3d.js');
+      escena = await montarPicada(cont.querySelector('canvas')!, { nivel: 1, parallax: false });
+      calcular();
+    } catch { cont.classList.add('sin-3d'); }
+  }, { rootMargin: '300px' });
+  io.observe(cont);
+</script>

@@ -1,0 +1,140 @@
+---
+import Icono from './Icono.astro';
+import data from '../data/ofertas.json';
+
+const fecha = new Date(data.actualizado + 'T12:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
+const ofertas = [...data.ofertas].sort((a, b) => Number(b.destacada) - Number(a.destacada));
+---
+<section class="seccion ofertas" id="ofertas">
+  <div class="contenedor">
+    <header class="cabecera-seccion ofertas-cab">
+      <div>
+        <span class="eyebrow revelar">Pizarra de la semana</span>
+        <h2 class="titulo revelar" data-delay="1">Ofertas <em>recién escritas</em></h2>
+      </div>
+      <p class="bajada revelar" data-delay="2">
+        Las mismas que ves en la vereda de San Blas, ahora también acá. Se actualizan todas las semanas;
+        tocá <strong>“Lo quiero”</strong> y la sumamos a tu pedido.
+      </p>
+    </header>
+
+    <div class="pizarra textura-pizarra revelar">
+      <div class="pizarra-cab">
+        <span class="tiza pizarra-titulo">¡Hoy en Cuca!</span>
+        <span class="tiza pizarra-fecha">act. {fecha}</span>
+      </div>
+
+      <div class="ofertas-grid">
+        {ofertas.map((o) => (
+          <article class:list={['oferta', `c-${o.color}`, { destacada: o.destacada }]} data-oferta data-desde={o.desde} data-hasta={o.hasta}>
+            <span class="oferta-etiqueta">{o.etiqueta}</span>
+            <h3 class="tiza oferta-titulo">{o.titulo}</h3>
+            {o.bajada && <p class="oferta-bajada">{o.bajada}</p>}
+            {o.items.length > 0 && (
+              <ul class="oferta-items tiza">
+                {o.items.map((it) => (
+                  <li><span>{it.nombre}</span><span class="puntos" aria-hidden="true"></span><strong>{it.precio}</strong></li>
+                ))}
+              </ul>
+            )}
+            <div class="oferta-pie">
+              {o.precio && <span class="tiza oferta-precio">{o.precio}</span>}
+              <button
+                class="btn btn-chico"
+                type="button"
+                data-agregar
+                data-id={`oferta-${o.id}`}
+                data-nombre={`Oferta: ${o.titulo}`}
+                data-opcion={o.items.length ? o.items.map((i) => i.nombre).join(' / ') : ''}
+                data-opciones={o.items.length ? JSON.stringify(o.items.map((i) => `${i.nombre} ${i.precio}`)) : ''}
+              >
+                <Icono nombre="mas" /> Lo quiero
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="pizarra-nota">Precios de referencia, sujetos a cambios y hasta agotar stock. Confirmamos todo por WhatsApp.</p>
+      <p class="pizarra-vacia tiza" data-sin-ofertas hidden>¡Estamos escribiendo la pizarra nueva! Volvé pronto 😉</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ofertas-cab { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 60px; align-items: end; }
+  .ofertas-cab .titulo { margin-bottom: 0; }
+
+  .pizarra {
+    position: relative; border-radius: 22px; padding: clamp(22px, 4vw, 48px);
+    border: clamp(10px, 1.6vw, 18px) solid #5e3b1f;
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.35), inset 0 0 80px rgba(0, 0, 0, 0.55), 0 0 0 2px #3c2412, var(--sombra);
+    background-color: #1c211e;
+  }
+  .pizarra-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 26px; border-bottom: 2px dashed var(--linea-2); padding-bottom: 14px; }
+  .pizarra-titulo { font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1; }
+  .pizarra-fecha { font-size: 1.5rem; color: var(--tiza-3); white-space: nowrap; }
+
+  .ofertas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .oferta {
+    --c: var(--tiza);
+    position: relative; display: flex; flex-direction: column; gap: 8px; padding: 22px;
+    border: 2px solid color-mix(in srgb, var(--c) 45%, transparent); border-radius: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    transition: transform 0.4s var(--ease), background 0.3s;
+  }
+  .oferta:hover { transform: translateY(-4px) rotate(-0.4deg); background: rgba(255, 255, 255, 0.045); }
+  .oferta.destacada {
+    grid-row: span 2; justify-content: center; text-align: center; border-style: dashed; border-width: 3px; overflow: hidden; isolation: isolate;
+    background: linear-gradient(180deg, rgba(28, 33, 30, 0.55), rgba(28, 33, 30, 0.92) 70%), url('/img/picada-dark.webp') center / cover;
+  }
+  .oferta:not(.destacada):last-child:nth-child(even) { grid-column: span 2; }
+  .c-mostaza { --c: var(--mostaza); }
+  .c-menta { --c: var(--menta); }
+  .c-rosa { --c: var(--rosa); }
+  .c-tiza { --c: var(--tiza); }
+
+  .oferta-etiqueta {
+    align-self: flex-start; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--negro); background: var(--c); padding: 4px 10px; border-radius: 999px;
+  }
+  .destacada .oferta-etiqueta { align-self: center; }
+  .oferta-titulo { margin: 4px 0 0; font-size: clamp(2rem, 3vw, 2.6rem); line-height: 1; color: var(--c); }
+  .destacada .oferta-titulo { font-size: clamp(3rem, 6vw, 5rem); }
+  .oferta-bajada { margin: 0; color: var(--tiza-2); font-size: 0.93rem; }
+  .oferta-items { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 2px; font-size: 1.7rem; line-height: 1.15; }
+  .oferta-items li { display: flex; align-items: baseline; gap: 8px; }
+  .oferta-items .puntos { flex: 1; border-bottom: 2px dotted var(--linea-2); transform: translateY(-6px); }
+  .oferta-items strong { color: var(--c); }
+  .oferta-pie { margin-top: auto; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .destacada .oferta-pie { justify-content: center; flex-direction: column; }
+  .oferta-precio { font-size: 2.2rem; color: var(--c); line-height: 1; }
+  .oferta .btn :global(svg) { width: 16px; height: 16px; }
+
+  .pizarra-nota { margin: 22px 0 0; font-size: 0.82rem; color: var(--tiza-3); text-align: center; }
+  .pizarra-vacia { text-align: center; font-size: 2.2rem; margin: 20px 0; }
+
+  @media (max-width: 960px) {
+    .ofertas-cab { grid-template-columns: 1fr; }
+    .ofertas-grid { grid-template-columns: 1fr 1fr; }
+    .oferta.destacada { grid-column: 1 / -1; grid-row: auto; min-height: 320px; }
+    .oferta:not(.destacada):last-child:nth-child(even) { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .ofertas-grid { grid-template-columns: 1fr; }
+    .oferta.destacada { min-height: 280px; }
+    .pizarra { border-radius: 16px; }
+  }
+</style>
+
+<script>
+  // Oculta las ofertas vencidas o todavía no vigentes (fecha de Buenos Aires)
+  const hoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }).format(new Date());
+  let visibles = 0;
+  document.querySelectorAll<HTMLElement>('[data-oferta]').forEach((el) => {
+    const { desde, hasta } = el.dataset;
+    const vigente = (!desde || desde <= hoy) && (!hasta || hasta >= hoy);
+    el.hidden = !vigente;
+    if (vigente) visibles++;
+  });
+  if (!visibles) document.querySelector<HTMLElement>('[data-sin-ofertas]')!.hidden = false;
+</script>

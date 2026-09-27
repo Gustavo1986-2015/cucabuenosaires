@@ -1,0 +1,98 @@
+---
+import Icono from './Icono.astro';
+import negocio from '../data/negocio.json';
+import data from '../data/resenas.json';
+
+const rating = String(negocio.google.rating).replace('.', ',');
+---
+<section class="seccion resenas" id="resenas">
+  <div class="contenedor">
+    <div class="res-cab">
+      <div>
+        <span class="eyebrow revelar">Lo que dice el barrio</span>
+        <h2 class="titulo revelar" data-delay="1">Reseñas <em>de verdad</em></h2>
+      </div>
+      <a class="nota-google revelar" data-delay="2" href={negocio.mapsUrl} target="_blank" rel="noopener" aria-label={`${rating} de 5 estrellas en Google, ver todas las opiniones`}>
+        <span class="nota-num">{rating}</span>
+        <span class="nota-det">
+          <span class="estrellas" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icono nombre="estrella" />)}</span>
+          <span class="nota-txt"><Icono nombre="google" /> +{Math.floor(negocio.google.opiniones / 10) * 10} opiniones en Google</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <div class="carrusel" data-carrusel tabindex="0" aria-label="Reseñas de clientes en Google">
+    {data.resenas.map((r, i) => (
+      <figure class="resena" style={`--r:${(i % 3) - 1}deg`}>
+        <span class="comillas" aria-hidden="true">“</span>
+        <blockquote>{r.texto}</blockquote>
+        <figcaption>
+          <span class="avatar" aria-hidden="true">{r.autor.charAt(0)}</span>
+          <span><strong>{r.autor}</strong><small>{r.local ? 'Local Guide · ' : ''}{r.cuando}</small></span>
+          <span class="mini-g" aria-label="Reseña de Google"><Icono nombre="google" /></span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+
+  <div class="contenedor res-pie">
+    <div class="flechas">
+      <button type="button" data-mover="-1" aria-label="Reseñas anteriores"><Icono nombre="flecha" class="izq" /></button>
+      <button type="button" data-mover="1" aria-label="Más reseñas"><Icono nombre="flecha" /></button>
+    </div>
+    <a class="btn btn-linea" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icono nombre="google" /> Ver todas y dejar tu reseña</a>
+  </div>
+</section>
+
+<style>
+  .res-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+  .res-cab .titulo { margin-bottom: 0; }
+  .nota-google { display: flex; align-items: center; gap: 16px; padding: 14px 22px; border-radius: 20px; border: 1px solid var(--linea-2); background: var(--pizarra-2); transition: border-color 0.2s; }
+  .nota-google:hover { border-color: var(--mostaza); }
+  .nota-num { font-family: var(--f-display); font-weight: 900; font-size: 3.4rem; line-height: 1; }
+  .nota-det { display: grid; gap: 4px; }
+  .estrellas { display: flex; gap: 2px; color: var(--mostaza); }
+  .estrellas :global(svg) { width: 20px; height: 20px; }
+  .nota-txt { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--tiza-2); font-weight: 600; }
+  .nota-txt :global(svg) { width: 16px; height: 16px; }
+
+  .carrusel {
+    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    padding: 20px max(var(--gutter), calc((100% - var(--ancho)) / 2)) 30px; scroll-padding-inline: max(var(--gutter), calc((100% - var(--ancho)) / 2));
+  }
+  .carrusel::-webkit-scrollbar { display: none; }
+  .resena {
+    flex: 0 0 min(380px, 84vw); scroll-snap-align: start; margin: 0; position: relative; display: flex; flex-direction: column; gap: 18px;
+    padding: 44px 26px 24px; border-radius: 22px; background: var(--tiza); color: var(--negro); rotate: var(--r);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.8); transition: rotate 0.4s var(--ease), translate 0.4s var(--ease);
+  }
+  .resena:hover { rotate: 0deg; translate: 0 -6px; }
+  .resena:nth-child(3n + 2) { background: var(--crema); }
+  .resena:nth-child(3n) { background: #f7e3b3; }
+  .comillas { position: absolute; top: -10px; left: 18px; font-family: var(--f-display); font-size: 5.5rem; line-height: 1; color: var(--mostaza); }
+  .resena blockquote { margin: 0; font-size: 1.02rem; line-height: 1.55; font-weight: 500; flex: 1; }
+  .resena figcaption { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--negro); color: var(--tiza); font-weight: 800; }
+  .resena figcaption strong { display: block; font-size: 0.95rem; }
+  .resena figcaption small { color: #6b665c; font-size: 0.78rem; }
+  .mini-g { margin-left: auto; }
+  .mini-g :global(svg) { width: 20px; height: 20px; }
+
+  .res-pie { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .flechas { display: flex; gap: 8px; }
+  .flechas button { width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid var(--linea-2); background: transparent; display: grid; place-items: center; transition: background 0.2s; }
+  .flechas button:hover { background: rgba(243, 239, 230, 0.1); }
+  .flechas :global(.izq) { transform: scaleX(-1); }
+  .res-pie .btn :global(svg) { width: 18px; height: 18px; }
+</style>
+
+<script>
+  const car = document.querySelector<HTMLElement>('[data-carrusel]')!;
+  document.querySelectorAll<HTMLButtonElement>('[data-mover]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const card = car.querySelector<HTMLElement>('.resena')!;
+      car.scrollBy({ left: Number(b.dataset.mover) * (card.offsetWidth + 20), behavior: 'smooth' });
+    }),
+  );
+</script>

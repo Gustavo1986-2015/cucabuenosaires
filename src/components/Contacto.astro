@@ -1,0 +1,113 @@
+---
+import Icono from './Icono.astro';
+import LogoCK from './LogoCK.astro';
+import negocio from '../data/negocio.json';
+
+const orden = [2, 3, 4, 5, 6, 0, 1];
+const horarios = orden.map((d) => negocio.horarios[d]);
+const wa = `https://wa.me/${negocio.whatsapp}`;
+const mapa = `https://www.google.com/maps?q=${encodeURIComponent('CUCA-BS.AS., San Blas 4101, C1407 CABA')}&z=16&output=embed`;
+---
+<section class="seccion contacto" id="contacto">
+  <div class="contenedor">
+    <header class="cabecera-seccion">
+      <span class="eyebrow revelar">Visitanos</span>
+      <h2 class="titulo revelar" data-delay="1">Estamos en <em>San Blas 4101</em></h2>
+    </header>
+
+    <div class="contacto-grid">
+      <div class="mapa revelar">
+        <iframe src={mapa} title="Mapa: Cuca en San Blas 4101, Floresta" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <a class="btn btn-chico mapa-btn" href={negocio.comoLlegarUrl} target="_blank" rel="noopener"><Icono nombre="pin" /> Cómo llegar</a>
+      </div>
+
+      <div class="info revelar" data-delay="1">
+        <div class="bloque-info">
+          <h3><Icono nombre="reloj" /> Horarios</h3>
+          <table class="horarios">
+            <tbody>
+              {horarios.map((h) => (
+                <tr data-dia={h.dia}>
+                  <th scope="row">{h.nombre}</th>
+                  <td>{h.turnos.length ? h.turnos.map((t) => `${t[0]} a ${t[1]}`).join(' · ') : 'Cerrado'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bloque-info">
+          <h3><Icono nombre="pin" /> Dirección</h3>
+          <p>{negocio.direccion}, {negocio.codigoPostal} {negocio.barrio}<br />{negocio.ciudad}</p>
+        </div>
+
+        <div class="botones-contacto">
+          <a class="btn btn-wa" href={wa} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> WhatsApp</a>
+          <a class="btn btn-linea" href={`tel:${negocio.telefonoIntl}`}><Icono nombre="telefono" /> {negocio.telefono}</a>
+          <a class="btn btn-linea" href={negocio.instagram} target="_blank" rel="noopener"><Icono nombre="instagram" /> {negocio.instagramUser}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor pie-in">
+    <div class="pie-marca">
+      <LogoCK class="pie-ck" />
+      <img src="/brand/firma.svg" alt="Cuca Buenos Aires" width="1104" height="720" class="pie-firma" loading="lazy" />
+    </div>
+    <p class="pie-lema tiza">#ExpertosEnFiambres</p>
+    <nav class="pie-nav" aria-label="Pie">
+      <a href="#ofertas">Ofertas</a><a href="#productos">Productos</a><a href="#picada">Armá tu picada</a><a href="#pedido">Pedido online</a><a href="#contacto">Contacto</a>
+    </nav>
+    <p class="pie-legal">
+      © {new Date().getFullYear()} Cuca Buenos Aires · San Blas 4101, Floresta, CABA · Precios sujetos a cambios, confirmados por WhatsApp.
+      Algunas fotos son ilustrativas.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .contacto-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(20px, 3vw, 40px); }
+  .mapa { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid var(--linea-2); min-height: 420px; background: var(--pizarra-2); }
+  .mapa iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(0.9) invert(0.92) contrast(0.9) hue-rotate(180deg); }
+  .mapa-btn { position: absolute; left: 16px; bottom: 16px; }
+  .mapa-btn :global(svg) { width: 18px; height: 18px; }
+
+  .info { display: grid; gap: 22px; align-content: start; }
+  .bloque-info { padding: 22px; border-radius: 20px; border: 1px solid var(--linea); background: rgba(243, 239, 230, 0.025); }
+  .bloque-info h3 { margin: 0 0 12px; display: flex; gap: 10px; align-items: center; font-family: var(--f-display); font-size: 1.25rem; }
+  .bloque-info h3 :global(svg) { width: 22px; height: 22px; color: var(--mostaza); }
+  .bloque-info p { margin: 0; color: var(--tiza-2); }
+  .horarios { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  .horarios th { text-align: left; font-weight: 600; color: var(--tiza-2); padding: 7px 0; }
+  .horarios td { text-align: right; color: var(--tiza); font-variant-numeric: tabular-nums; }
+  .horarios tr + tr { border-top: 1px solid var(--linea); }
+  .horarios tr:global(.hoy) th, .horarios tr:global(.hoy) td { color: var(--mostaza); font-weight: 800; }
+  .horarios tr:global(.hoy) th::after { content: " · hoy"; font-weight: 600; font-size: 0.8rem; }
+  .botones-contacto { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .pie { border-top: 1px solid var(--linea); padding: 64px 0 40px; background: var(--pizarra); }
+  .pie-in { display: grid; justify-items: center; text-align: center; gap: 18px; }
+  .pie-marca { display: flex; align-items: center; gap: 22px; }
+  .pie-marca :global(.pie-ck) { width: 72px; color: var(--tiza); }
+  .pie-firma { width: 190px; }
+  .pie-lema { margin: 0; font-size: 2rem; color: var(--mostaza); }
+  .pie-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; }
+  .pie-nav a { color: var(--tiza-2); font-weight: 600; font-size: 0.92rem; }
+  .pie-nav a:hover { color: var(--tiza); }
+  .pie-legal { margin: 8px 0 0; font-size: 0.8rem; color: var(--tiza-3); max-width: 70ch; }
+
+  @media (max-width: 900px) {
+    .contacto-grid { grid-template-columns: 1fr; }
+    .mapa { min-height: 320px; }
+  }
+</style>
+
+<script>
+  const dia = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(
+    new Intl.DateTimeFormat('en-US', { timeZone: 'America/Argentina/Buenos_Aires', weekday: 'short' }).format(new Date()),
+  );
+  document.querySelector(`.horarios tr[data-dia="${dia}"]`)?.classList.add('hoy');
+</script>

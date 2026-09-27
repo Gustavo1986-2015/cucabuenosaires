@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#0d0d0c"/>
+  <svg x="9" y="12" width="46" height="40" viewBox="24 14 504 432" fill="#f3efe6">
+    <defs>
+      <mask id="c" maskUnits="userSpaceOnUse" x="0" y="0" width="560" height="460">
+        <rect width="560" height="460" fill="#000"/>
+        <circle cx="175" cy="190" r="145" fill="#fff"/>
+        <polygon points="361,20 460,20 250,300 151,300" fill="#fff"/>
+        <circle cx="184" cy="175" r="58" fill="#000"/>
+        <polygon points="331,20 361,20 226,200 196,200" fill="#000"/>
+        <polygon points="460,20 560,20 560,460 130,460" fill="#000"/>
+      </mask>
+      <mask id="s" maskUnits="userSpaceOnUse" x="0" y="0" width="560" height="460">
+        <rect width="560" height="460" fill="#fff"/>
+        <circle cx="175" cy="190" r="158" fill="#000"/>
+      </mask>
+    </defs>
+    <rect width="560" height="460" mask="url(#c)"/>
+    <rect x="226" y="240" width="72" height="200" mask="url(#s)"/>
+    <polygon points="380,150 522,292 424,292 339,205"/>
+  </svg>
+</svg>

@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Ofertas from '../components/Ofertas.astro';
+import Productos from '../components/Productos.astro';
+import ArmaPicada from '../components/ArmaPicada.astro';
+import MigaMedialunas from '../components/MigaMedialunas.astro';
+import Nosotros from '../components/Nosotros.astro';
+import Resenas from '../components/Resenas.astro';
+import Pedido from '../components/Pedido.astro';
+import Contacto from '../components/Contacto.astro';
+import Carrito from '../components/Carrito.astro';
+---
+<Base>
+  <Header />
+  <main id="contenido">
+    <Hero />
+    <Ofertas />
+    <Productos />
+    <ArmaPicada />
+    <MigaMedialunas />
+    <Nosotros />
+    <Resenas />
+    <Pedido />
+    <Contacto />
+  </main>
+  <Carrito />
+</Base>
+
+<script>
+  import '../scripts/carrito.js';
+
+  // Aparición suave de los elementos al hacer scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  document.querySelectorAll('.revelar').forEach((el) => io.observe(el));
+</script>

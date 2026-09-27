@@ -1,0 +1,157 @@
+---
+import LogoCK from './LogoCK.astro';
+import Icono from './Icono.astro';
+import negocio from '../data/negocio.json';
+
+const links = [
+  ['#ofertas', 'Ofertas'],
+  ['#productos', 'Productos'],
+  ['#picada', 'Armá tu picada'],
+  ['#miga', 'Miga & medialunas'],
+  ['#nosotros', 'Nosotros'],
+  ['#contacto', 'Contacto'],
+];
+const wa = `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent('¡Hola Cuca! Quería hacer una consulta 😊')}`;
+---
+<header class="header" data-header>
+  <div class="contenedor header-in">
+    <a href="#inicio" class="marca" aria-label="Cuca Buenos Aires, ir al inicio">
+      <LogoCK class="marca-ck" />
+      <span class="marca-txt">
+        <span class="marca-nombre">CUCA</span>
+        <span class="marca-sub">Quesos · Fiambres</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      {links.map(([href, txt]) => <a href={href}>{txt}</a>)}
+    </nav>
+
+    <div class="acciones">
+      <button class="btn-carrito" type="button" data-abrir-carrito aria-label="Ver mi pedido">
+        <Icono nombre="carrito" />
+        <span class="contador" data-contador hidden>0</span>
+      </button>
+      <a class="btn btn-wa btn-chico solo-desktop" href={wa} target="_blank" rel="noopener">
+        <Icono nombre="whatsapp" /> Pedir
+      </a>
+      <button class="btn-menu" type="button" data-menu aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú">
+        <Icono nombre="menu" />
+      </button>
+    </div>
+  </div>
+
+  <div class="menu-movil textura-pizarra" id="menu-movil" data-menu-panel hidden>
+    <nav aria-label="Menú móvil">
+      {links.map(([href, txt], i) => <a href={href} style={`--i:${i}`}>{txt}</a>)}
+    </nav>
+    <div class="menu-pie">
+      <a class="btn btn-wa btn-bloque" href={wa} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> Escribinos por WhatsApp</a>
+      <p>{negocio.direccion}, {negocio.barrio} · Mar a Sáb</p>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: fixed; inset: 0 0 auto; z-index: 50; height: var(--header-h);
+    transition: background 0.35s, box-shadow 0.35s, backdrop-filter 0.35s;
+  }
+  .header.solido {
+    background: rgba(13, 13, 12, 0.82); backdrop-filter: blur(14px) saturate(1.2);
+    box-shadow: 0 1px 0 var(--linea);
+  }
+  .header-in { height: 100%; display: flex; align-items: center; gap: 24px; }
+  .marca { display: flex; align-items: center; gap: 12px; flex: none; }
+  .marca :global(.marca-ck) { width: 44px; height: auto; color: var(--tiza); transition: transform 0.5s var(--ease); }
+  .marca:hover :global(.marca-ck) { transform: rotate(-8deg) scale(1.05); }
+  .marca-txt { display: grid; line-height: 1; }
+  .marca-nombre { font-family: var(--f-display); font-weight: 900; font-size: 1.35rem; letter-spacing: 0.14em; }
+  .marca-sub { font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tiza-3); margin-top: 4px; }
+
+  .nav { display: flex; gap: 4px; margin-left: auto; }
+  .nav a {
+    position: relative; padding: 8px 12px; font-size: 0.9rem; font-weight: 600; color: var(--tiza-2);
+    border-radius: 999px; transition: color 0.2s;
+  }
+  .nav a::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: 3px; height: 2px; background: var(--mostaza);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.35s var(--ease);
+  }
+  .nav a:hover, .nav a.activo { color: var(--tiza); }
+  .nav a:hover::after, .nav a.activo::after { transform: scaleX(1); }
+
+  .acciones { display: flex; align-items: center; gap: 10px; }
+  .btn-carrito, .btn-menu {
+    position: relative; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%;
+    background: rgba(243, 239, 230, 0.07); border: 1px solid var(--linea); color: var(--tiza);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-carrito:hover, .btn-menu:hover { background: rgba(243, 239, 230, 0.14); }
+  .btn-carrito :global(svg), .btn-menu :global(svg) { width: 22px; height: 22px; }
+  .contador {
+    position: absolute; top: -4px; right: -4px; min-width: 21px; height: 21px; padding: 0 5px; border-radius: 999px;
+    background: var(--mostaza); color: var(--negro); font-size: 0.72rem; font-weight: 800; display: grid; place-items: center;
+  }
+  .contador.pop { animation: pop 0.45s var(--ease); }
+  @keyframes pop { 40% { transform: scale(1.45); } }
+  .btn-menu { display: none; }
+
+  .menu-movil {
+    position: fixed; inset: var(--header-h) 0 0; z-index: 49; padding: 28px var(--gutter) 32px;
+    display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto;
+  }
+  .menu-movil nav { display: grid; gap: 4px; }
+  .menu-movil nav a {
+    font-family: var(--f-display); font-weight: 900; font-size: clamp(1.9rem, 8vw, 2.6rem); padding: 6px 0;
+    border-bottom: 1px solid var(--linea); opacity: 0; transform: translateY(12px);
+    animation: entrar 0.5s var(--ease) forwards; animation-delay: calc(var(--i) * 45ms);
+  }
+  @keyframes entrar { to { opacity: 1; transform: none; } }
+  .menu-pie { display: grid; gap: 14px; margin-top: 28px; }
+  .menu-pie p { margin: 0; text-align: center; color: var(--tiza-3); font-size: 0.9rem; }
+
+  @media (max-width: 1080px) {
+    .nav { display: none; }
+    .acciones { margin-left: auto; }
+    .btn-menu { display: grid; }
+  }
+  @media (max-width: 560px) {
+    .solo-desktop { display: none; }
+    .marca-sub { display: none; }
+    .marca :global(.marca-ck) { width: 38px; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const onScroll = () => {
+    header.classList.toggle('solido', window.scrollY > 24);
+    if (window.scrollY < innerHeight * 0.5) document.querySelectorAll('.nav a.activo').forEach((a) => a.classList.remove('activo'));
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu]')!;
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]')!;
+  const setMenu = (abierto: boolean) => {
+    panel.hidden = !abierto;
+    btn.setAttribute('aria-expanded', String(abierto));
+    btn.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+    document.body.style.overflow = abierto ? 'hidden' : '';
+    header.classList.toggle('solido', abierto || window.scrollY > 24);
+  };
+  btn.addEventListener('click', () => setMenu(panel.hidden));
+  panel.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) setMenu(false); });
+
+  // Resalta la sección visible en el menú
+  const navLinks = [...document.querySelectorAll<HTMLAnchorElement>('.nav a')];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      navLinks.forEach((a) => a.classList.toggle('activo', a.getAttribute('href') === `#${en.target.id}`));
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  navLinks.forEach((a) => { const s = document.querySelector(a.getAttribute('href')!); if (s) io.observe(s); });
+</script>

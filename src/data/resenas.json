@@ -1,0 +1,14 @@
+{
+  "_ayuda": "Reseñas reales tomadas del perfil de Google 'CUCA-BS.AS.' (septiembre 2026). Se muestra nombre + inicial del apellido.",
+  "resenas": [
+    { "autor": "Konowall", "cuando": "hace 4 meses", "texto": "Excelente atención, excelente mercadería. Nos prepararon en tiempo récord un montón de bandejas de picada de primera calidad para un evento, con el servicio completo (talitas, servilletas, tenedores de copetín). ¡Un manjar todo! Lo súper recomiendo." },
+    { "autor": "Sergio B.", "cuando": "hace un mes", "texto": "Excelente atención. La variedad y calidad de fiambres es increíble. El sándwich de miga de roquefort, la especialidad de la casa." },
+    { "autor": "Flor F.", "cuando": "hace un mes", "local": true, "texto": "Excelente calidad de productos, pedimos una picada y sándwich de miga, todo muy rico y abundante. Obviamente volveremos a pedir." },
+    { "autor": "Victoria G.", "cuando": "hace un mes", "texto": "¡Los mejores del barrio! Los sándwiches de miga una delicia y la atención inigualable. ¡Gracias a la familia Cuca!" },
+    { "autor": "Aldana D.", "cuando": "hace un mes", "texto": "Excelente lugar. Muy destacable la atención de todos los chicos y son una LOCURA los sanguches de miga." },
+    { "autor": "Silvia M.", "cuando": "hace 7 meses", "local": true, "texto": "Excelente atención. Riquísimas las picadas y los sanguchitos de miga. Ojo, los sanguches más grandes son los mejores." },
+    { "autor": "Juju", "cuando": "hace un mes", "local": true, "texto": "La mejor fiambrera que podés encontrar en el barrio, un buen equipo y ambiente cómodo." },
+    { "autor": "Mauro A.", "cuando": "hace 6 meses", "local": true, "texto": "Son lo más. Amplio surtido y gran atención. De lo mejor del barrio." },
+    { "autor": "Rodolfo S.", "cuando": "hace un año", "local": true, "texto": "Excelente la calidad y variedad de quesos y fiambres. Muy amable la atención." }
+  ]
+}

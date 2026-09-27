@@ -1,0 +1,38 @@
+{
+  "_ayuda": "Catálogo. 'precio' vacío = se muestra 'Consultar'. 'opciones' son las presentaciones que el cliente elige al agregar al pedido. 'img' es un archivo dentro de /public/img.",
+  "categorias": [
+    { "id": "fiambres", "nombre": "Fiambres", "opciones": ["100 g", "250 g", "500 g", "1 kg"] },
+    { "id": "quesos", "nombre": "Quesos", "opciones": ["100 g", "250 g", "500 g", "1 kg"] },
+    { "id": "picadas", "nombre": "Picadas", "opciones": ["Chica (2-3 personas)", "Mediana (4-6 personas)", "Grande (7-10 personas)"] },
+    { "id": "miga", "nombre": "Sándwiches", "opciones": ["Media docena", "Docena", "2 docenas"] },
+    { "id": "medialunas", "nombre": "Medialunas", "opciones": ["Media docena", "Docena", "2 docenas"] },
+    { "id": "almacen", "nombre": "Almacén y vinos", "opciones": ["1 unidad", "2 unidades", "3 unidades"] }
+  ],
+  "productos": [
+    { "id": "jamon-crudo", "cat": "fiambres", "nombre": "Jamón crudo", "desc": "Estacionado, cortado fino en el momento.", "img": "picada-premium.webp", "precio": "", "tag": "Premium" },
+    { "id": "jamon-cocido", "cat": "fiambres", "nombre": "Jamón cocido natural", "desc": "Suave, jugoso, ideal para sándwiches.", "img": "jamon.webp", "precio": "" },
+    { "id": "salame", "cat": "fiambres", "nombre": "Salame de campo", "desc": "Picado grueso, sabor bien de colonia.", "img": "salame.webp", "precio": "" },
+    { "id": "bondiola", "cat": "fiambres", "nombre": "Bondiola curada", "desc": "Especiada y tierna. Infaltable en la picada.", "img": "picada-gourmet.webp", "precio": "" },
+
+    { "id": "queso-ahumado", "cat": "quesos", "nombre": "Queso ahumado", "desc": "El que todos vuelven a pedir.", "img": "quesos.webp", "precio": "", "tag": "Favorito" },
+    { "id": "roquefort-malbec", "cat": "quesos", "nombre": "Roquefort al Malbec", "desc": "Intenso, con un toque de vino tinto.", "img": "picada-tabla.webp", "precio": "", "tag": "Especialidad" },
+    { "id": "reggianito", "cat": "quesos", "nombre": "Reggianito", "desc": "Por horma o fraccionado, para rallar o picar.", "img": "quesos-estante.webp", "precio": "" },
+    { "id": "cremoso", "cat": "quesos", "nombre": "Cremoso", "desc": "Primeras marcas. Mirá la pizarra de ofertas.", "img": "quesos.webp", "precio": "" },
+
+    { "id": "picada-clasica", "cat": "picadas", "nombre": "Picada Clásica", "desc": "Jamón, salame, quesos, aceitunas y pan.", "img": "picada-premium.webp", "precio": "" },
+    { "id": "picada-premium", "cat": "picadas", "nombre": "Picada Premium", "desc": "Crudo, bondiola, ahumado, roquefort y frutos secos.", "img": "picada-dark.webp", "precio": "", "tag": "Más pedida" },
+    { "id": "bandejas-evento", "cat": "picadas", "nombre": "Bandejas para eventos", "desc": "Con talitas, servilletas y tenedores de copetín.", "img": "picada-gourmet.webp", "precio": "" },
+
+    { "id": "miga-jyq", "cat": "miga", "nombre": "Miga de jamón y queso", "desc": "El clásico de siempre, bien relleno.", "img": "miga.webp", "precio": "" },
+    { "id": "miga-roquefort", "cat": "miga", "nombre": "Miga de roquefort, jamón y nuez", "desc": "La especialidad de la casa.", "img": "miga.webp", "precio": "", "tag": "Especialidad" },
+    { "id": "miga-surtidos", "cat": "miga", "nombre": "Miga surtidos", "desc": "Variedad de sabores, ideales para reuniones.", "img": "miga.webp", "precio": "" },
+    { "id": "sandwich-gourmet", "cat": "miga", "nombre": "Sándwich gourmet", "desc": "Fiambres premium y quesos de verdad, en pan casero.", "img": "picada-tabla.webp", "precio": "" },
+
+    { "id": "medialunas-manteca", "cat": "medialunas", "nombre": "Medialunas de manteca", "desc": "Doraditas y almibaradas.", "img": "medialunas.webp", "precio": "" },
+    { "id": "medialunas-grasa", "cat": "medialunas", "nombre": "Medialunas de grasa", "desc": "Las de toda la vida, para el mate.", "img": "medialunas-2.webp", "precio": "" },
+    { "id": "medialunas-jyq", "cat": "medialunas", "nombre": "Medialunas rellenas", "desc": "De jamón y queso, listas para disfrutar.", "img": "medialunas-2.webp", "precio": "" },
+
+    { "id": "aceitunas-griegas", "cat": "almacen", "nombre": "Aceitunas griegas", "desc": "Las que mencionan en todas las reseñas.", "img": "aceitunas.webp", "precio": "", "tag": "Imperdible" },
+    { "id": "vinos", "cat": "almacen", "nombre": "Vinos seleccionados", "desc": "Tintos y blancos para acompañar la picada.", "img": "vinos.webp", "precio": "" }
+  ]
+}

@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import negocio from '../data/negocio.json';
+
+interface Props { titulo?: string; descripcion?: string; }
+const {
+  titulo = 'Cuca Buenos Aires · Quesos y fiambres premium en Floresta',
+  descripcion = 'Fiambrería y quesería gourmet en San Blas 4101, Floresta (CABA). Picadas, sándwiches de miga, medialunas, quesos y fiambres premium. Pedidos por WhatsApp y envíos a domicilio.',
+} = Astro.props;
+
+const url = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/img/og-cuca.jpg', Astro.site);
+
+const dias = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': ['Store', 'FoodEstablishment'],
+  name: negocio.nombre,
+  alternateName: negocio.nombreGoogle,
+  description: descripcion,
+  url: url.href,
+  image: ogImage.href,
+  telephone: negocio.telefonoIntl,
+  priceRange: '$$',
+  servesCuisine: ['Fiambres', 'Quesos', 'Picadas', 'Sándwiches de miga'],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: negocio.direccion,
+    addressLocality: 'Floresta, Ciudad Autónoma de Buenos Aires',
+    postalCode: negocio.codigoPostal,
+    addressCountry: 'AR',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: negocio.geo.lat, longitude: negocio.geo.lng },
+  hasMap: negocio.mapsUrl,
+  sameAs: [negocio.instagram],
+  openingHoursSpecification: negocio.horarios.flatMap((h) =>
+    h.turnos.map(([opens, closes]) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: `https://schema.org/${dias[h.dia]}`,
+      opens,
+      closes,
+    })),
+  ),
+};
+---
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={url.href} />
+    <meta name="theme-color" content="#0d0d0c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="Cuca Buenos Aires" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={url.href} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap"
+    />
+    <link rel="preload" as="image" href="/img/picada-dark.webp" fetchpriority="high" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <slot />
+    <style>
+      .saltar {
+        position: fixed; left: 16px; top: -60px; z-index: 200; padding: 10px 16px; border-radius: 10px;
+        background: var(--mostaza); color: var(--negro); font-weight: 800; transition: top 0.2s;
+      }
+      .saltar:focus { top: 16px; }
+    </style>
+  </body>
+</html>

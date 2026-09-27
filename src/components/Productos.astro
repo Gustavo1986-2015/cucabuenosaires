@@ -1,0 +1,144 @@
+---
+import Icono from './Icono.astro';
+import data from '../data/productos.json';
+
+const cats = data.categorias;
+const opcionesDe = (cat: string) => cats.find((c) => c.id === cat)?.opciones ?? [];
+---
+<section class="seccion productos" id="productos">
+  <div class="contenedor">
+    <header class="cabecera-seccion centro">
+      <span class="eyebrow revelar">Mostrador</span>
+      <h2 class="titulo revelar" data-delay="1">Lo que te llevás <em>de Cuca</em></h2>
+      <p class="bajada revelar" data-delay="2">
+        Elegí presentación, sumalo al pedido y te lo confirmamos por WhatsApp. ¿Dudas? Pasá y probá antes de comprar.
+      </p>
+    </header>
+
+    <div class="filtros revelar" role="tablist" aria-label="Categorías">
+      <button type="button" role="tab" aria-selected="true" data-filtro="todos">Todo</button>
+      {cats.map((c) => <button type="button" role="tab" aria-selected="false" data-filtro={c.id}>{c.nombre}</button>)}
+    </div>
+
+    <ul class="grilla" data-grilla>
+      {data.productos.map((p, i) => {
+        const ops = opcionesDe(p.cat);
+        const selId = `op-${p.id}`;
+        return (
+          <li class="card revelar" data-cat={p.cat} data-delay={String(i % 4)} data-tilt>
+            <div class="card-foto">
+              <img src={`/img/${p.img}`} alt={p.nombre} width="900" height="700" loading="lazy" decoding="async" />
+              {p.tag && <span class="card-tag">{p.tag}</span>}
+            </div>
+            <div class="card-cuerpo">
+              <div class="card-top">
+                <h3>{p.nombre}</h3>
+                <span class="precio">{p.precio || 'Consultar'}</span>
+              </div>
+              <p>{p.desc}</p>
+              <div class="card-accion">
+                <label class="sr-only" for={selId}>Presentación de {p.nombre}</label>
+                <select id={selId} class="card-select">
+                  {ops.map((o) => <option value={o}>{o}</option>)}
+                </select>
+                <button type="button" class="btn-agregar" data-agregar data-id={p.id} data-nombre={p.nombre} data-img={p.img} data-select={`#${selId}`} aria-label={`Agregar ${p.nombre} al pedido`}>
+                  <Icono nombre="mas" />
+                </button>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .filtros {
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0 auto 40px;
+  }
+  .filtros button {
+    min-height: 42px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--linea-2);
+    background: transparent; font-weight: 700; font-size: 0.9rem; color: var(--tiza-2); transition: all 0.25s;
+  }
+  .filtros button:hover { color: var(--tiza); border-color: var(--tiza-3); }
+  .filtros button[aria-selected="true"] { background: var(--tiza); color: var(--negro); border-color: var(--tiza); }
+
+  .grilla { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .card {
+    position: relative; display: flex; flex-direction: column; border-radius: var(--radio); overflow: hidden;
+    background: var(--pizarra-2); border: 1px solid var(--linea);
+    transform-style: preserve-3d; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), border-color 0.3s, opacity 0.9s var(--ease);
+    will-change: transform;
+  }
+  .card.visible { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+  .card:hover { box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.9); border-color: var(--linea-2); }
+  .card.oculta { display: none; }
+  .card-foto { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+  .card-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+  .card:hover .card-foto img { transform: scale(1.07); }
+  .card-foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(30, 34, 32, 0.9)); }
+  .card-tag {
+    position: absolute; top: 12px; left: 12px; z-index: 1; padding: 4px 11px; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; background: var(--mostaza); color: var(--negro);
+  }
+  .card-cuerpo { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px 18px; flex: 1; }
+  .card-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .card h3 { margin: 0; font-family: var(--f-display); font-size: 1.22rem; line-height: 1.15; }
+  .precio { font-family: var(--f-tiza); font-weight: 700; font-size: 1.35rem; color: var(--mostaza); white-space: nowrap; }
+  .card p { margin: 0; color: var(--tiza-3); font-size: 0.9rem; line-height: 1.45; }
+  .card-accion { margin-top: auto; padding-top: 8px; display: flex; gap: 8px; }
+  .card-select {
+    flex: 1; min-width: 0; min-height: 44px; padding: 0 34px 0 12px; border-radius: 12px; border: 1.5px solid var(--linea);
+    background: rgba(243, 239, 230, 0.05) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23d9d3c6' stroke-width='2' fill='none'/></svg>") no-repeat right 12px center;
+    appearance: none; font-size: 0.86rem; font-weight: 600;
+  }
+  .card-select option { background: var(--pizarra-2); }
+  .btn-agregar {
+    flex: none; width: 44px; height: 44px; border-radius: 12px; border: 0; display: grid; place-items: center;
+    background: var(--mostaza); color: var(--negro); transition: transform 0.2s, background 0.2s;
+  }
+  .btn-agregar:hover { background: var(--mostaza-2); transform: scale(1.06); }
+  .btn-agregar:global(.ok) { background: #3ddc84; }
+  .btn-agregar :global(svg) { width: 20px; height: 20px; }
+
+  @media (max-width: 1100px) { .grilla { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 800px) {
+    .grilla { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .filtros { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scrollbar-width: none; }
+    .filtros button { flex: none; }
+    .card-cuerpo { padding: 12px; }
+    .card h3 { font-size: 1.05rem; }
+    .card p { display: none; }
+    .card-top { flex-direction: column; gap: 2px; }
+    .card-accion { flex-direction: column; }
+    .card-select { flex: none; width: 100%; font-size: 0.8rem; padding-right: 28px; background-position: right 10px center; }
+    .btn-agregar { width: 100%; height: 40px; }
+  }
+</style>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('[data-filtro]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-grilla] .card');
+  botones.forEach((b) => b.addEventListener('click', () => {
+    botones.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+    const f = b.dataset.filtro;
+    cards.forEach((c) => {
+      const ver = f === 'todos' || c.dataset.cat === f;
+      c.classList.toggle('oculta', !ver);
+      if (ver) c.classList.add('visible');
+    });
+  }));
+
+  // Inclinación 3D de las tarjetas con el mouse
+  if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+    cards.forEach((c) => {
+      c.addEventListener('pointermove', (e) => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 10}deg`);
+        c.style.setProperty('--rx', `${((e.clientY - r.top) / r.height - 0.5) * -10}deg`);
+      });
+      c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+  }
+</script>

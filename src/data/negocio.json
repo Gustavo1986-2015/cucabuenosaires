@@ -1,0 +1,30 @@
+{
+  "nombre": "Cuca Buenos Aires",
+  "nombreGoogle": "CUCA-BS.AS.",
+  "eslogan": "Expertos en fiambres",
+  "whatsapp": "5491159524637",
+  "telefono": "011 5952-4637",
+  "telefonoIntl": "+541159524637",
+  "direccion": "San Blas 4101",
+  "barrio": "Floresta",
+  "ciudad": "Ciudad Autónoma de Buenos Aires",
+  "codigoPostal": "C1407",
+  "geo": { "lat": -34.6199471, "lng": -58.4945472 },
+  "instagram": "https://www.instagram.com/cuca.buenosaires/",
+  "instagramUser": "@cuca.buenosaires",
+  "mapsUrl": "https://www.google.com/maps?cid=2449337540700139380",
+  "comoLlegarUrl": "https://www.google.com/maps/dir/?api=1&destination=San+Blas+4101,+C1407+CABA",
+  "google": { "rating": 4.9, "opiniones": 113 },
+  "envios": "Hacemos envíos a domicilio. El costo se coordina por WhatsApp según la zona.",
+  "pagos": ["Efectivo", "Transferencia", "Mercado Pago", "Cuenta DNI"],
+  "horarios": [
+    { "dia": 0, "nombre": "Domingo", "turnos": [] },
+    { "dia": 1, "nombre": "Lunes", "turnos": [] },
+    { "dia": 2, "nombre": "Martes", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] },
+    { "dia": 3, "nombre": "Miércoles", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] },
+    { "dia": 4, "nombre": "Jueves", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] },
+    { "dia": 5, "nombre": "Viernes", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] },
+    { "dia": 6, "nombre": "Sábado", "turnos": [["09:30", "13:30"], ["17:30", "21:00"]] }
+  ],
+  "franjasEntrega": ["09:30 a 11:30", "11:30 a 13:30", "17:30 a 19:30", "19:30 a 21:00"]
+}

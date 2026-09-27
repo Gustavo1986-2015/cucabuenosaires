@@ -1,0 +1,63 @@
+{
+  "_ayuda": "Pizarra de ofertas. Cada oferta se muestra entre 'desde' y 'hasta' (AAAA-MM-DD). Si 'hasta' está vacío, no vence. 'precio' es texto libre: '$7.300', '2x1', '15% OFF'. 'destacada': true la muestra grande. Colores: mostaza, menta, rosa, tiza.",
+  "actualizado": "2026-09-26",
+  "ofertas": [
+    {
+      "id": "picada-comen4",
+      "titulo": "Comen 4, pican 8",
+      "bajada": "Nuestra picada estrella, pensada para compartir sin quedarse corto.",
+      "items": [],
+      "precio": "Consultá",
+      "etiqueta": "Estrella de la casa",
+      "color": "mostaza",
+      "destacada": true,
+      "desde": "2026-06-01",
+      "hasta": ""
+    },
+    {
+      "id": "cremoso-promo",
+      "titulo": "¡Cremoso en promo!",
+      "bajada": "Las mejores marcas de cremoso, al mejor precio del barrio.",
+      "items": [
+        { "nombre": "Barraza", "precio": "$7.300" },
+        { "nombre": "Punta del Agua", "precio": "$7.300" },
+        { "nombre": "Tregar", "precio": "$6.900" },
+        { "nombre": "D-70", "precio": "$5.900" }
+      ],
+      "precio": "",
+      "etiqueta": "Promo",
+      "color": "menta",
+      "destacada": false,
+      "desde": "2026-09-01",
+      "hasta": ""
+    },
+    {
+      "id": "maple-huevos",
+      "titulo": "Maple de huevos N°1",
+      "bajada": "Frescos, todas las semanas.",
+      "items": [
+        { "nombre": "Maple", "precio": "$6.800" },
+        { "nombre": "Docena", "precio": "$3.800" },
+        { "nombre": "½ docena", "precio": "$2.800" }
+      ],
+      "precio": "",
+      "etiqueta": "Almacén",
+      "color": "rosa",
+      "destacada": false,
+      "desde": "2026-09-01",
+      "hasta": ""
+    },
+    {
+      "id": "sabores-finde",
+      "titulo": "Viernes y sábados: sabores nuevos",
+      "bajada": "Desde las 12 h, nuevos quesos y fiambres para probar. Hasta agotar stock.",
+      "items": [],
+      "precio": "Vení a probar",
+      "etiqueta": "Degustación",
+      "color": "tiza",
+      "destacada": false,
+      "desde": "2026-01-01",
+      "hasta": ""
+    }
+  ]
+}
